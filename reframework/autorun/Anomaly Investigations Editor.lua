@@ -9,11 +9,12 @@ local create_rand_myst = sdk.find_type_definition('snow.quest.nRandomMysteryQues
 local check_auth = sdk.find_type_definition('snow.quest.nRandomMysteryQuest'):get_method('checkRandomMysteryQuestOrderBan')
 
 local window_flags = 0x10120
-local window_pos = Vector2f.new(400, 200)
+local window_pos = Vector2f.new(50, 50)
 local window_pivot = Vector2f.new(0, 0)
 local window_size = Vector2f.new(560, 820)
 local is_opened = false
-local version = '1.2.1'
+local valid_combinations = false
+local version = '1.2.2'
 
 local table_flags = 0x12780
 local table_row_flags = 0x1
@@ -27,6 +28,21 @@ local table_ = {
 	{'6',0,0,0,5,15,45,65},
 }
 
+local table_2 = {
+	{'Quest Level','1-10','11-20','21-30','31-40','41-50','51-60','61-70','71-80','81-120'},
+	{'Main Target Mystery Rank','0','0-1','0-2','0-3','0-3','0-4','0-4','0-5','0-5'},
+	{'Sub Target Mystery Rank','-','-','0-3,11(Apex)','0-5,11(Apex)','0-5,11','0-5,11','0-6,11','0-6,11','0-6,11'},
+	{'Extra Target Mystery Rank','0-1','0-2','0-3','0-5','0-5,11(ED)','0-5,11(ED)','0-6,11(ED)','0-6,11(ED)','0-6,11(ED)'},
+	{'Target Num','1','1','1-2','1-2','1-3','1-3','1-3','1-3','1-3'},
+	{'Quest Life','3-5,9','3-5,9','3-5','3-5','2-5','2-5','2-5','2-5','1-4'},
+	{'Time Limit','50','50','30,35,50','30,35,50','25,30,35,50','25,30,35,50','25,30,35,50','25,30,35,50','25,30,35,50'},
+	{'Hunter Num','4','4','4','4','4','4','4','2,4','2,4'}
+}
+
+local table_3 = {
+	{'Target Num','1','2','3'},
+	{'Time Limit','25,30,35,50','30,35,50','50'}
+}
 local monster_main_array = {}
 local monster_extra_array = {}
 local monster_intruder_array = {}
@@ -56,8 +72,10 @@ local auth_status_dict = {
 					[0]='Pass',
 					[1]='Fail',
 					[2]='Quest Level Too High',
-					[3]='Monster Rank Too High For Quest Level',
-					[4]='Duplicate Monsters'
+					[3]='Research Level Too Low',
+					[4]='Invalid Monsters',
+					[5]='Quest Level Too Low',
+					[6]='Invalid Quest Conditions'
 					}
 local rand_rank = {
 			['1']=0,
@@ -107,7 +125,7 @@ local rand_id = 0
 
 
 for id,data in pairs(monsters) do
-	monsters_id_table[ data['name'] ] = id
+	monsters_id_table[ data['name']..' - '..data['mystery_rank'] ] = id
 end
 
 for name,id in pairs(maps) do
@@ -227,14 +245,6 @@ local function generate_random(id)
 	reset_data(true)
 end
 
-local function random(array)
-	local id = nil
-	repeat
-		id = monsters_id_table[ array[ math.random(#array) ] ]
-	until id ~= '0' and id ~= '-1'
-	return id
-end
-
 local function edit_quest(mystery_data)
 	if quest_count == 1 then return end
 
@@ -256,11 +266,6 @@ local function edit_quest(mystery_data)
 		reset_data()
 		return
 	end
-
-	if monster0_id == '-1' then monster0_id = random(monster_main_array) end
-	if monster1_id == '-1' then monster1_id = random(monster_extra_array) end
-	if monster2_id == '-1' then monster2_id = random(monster_extra_array) end
-	if monster5_id == '-1' then monster5_id = random(monster_intruder_array) end
 
 	if target_num == 2 and monsters[monster1_id]['capture']
 	or target_num == 3 and (monsters[monster1_id]['capture'] or monsters[monster2_id]['capture']) then
@@ -423,17 +428,36 @@ local function reset_input()
 		monster_intruder_array = monster_intruder_array_
 	end
 
-	monster0 = index_of(monster_main_array,monsters[ tostring(quest['monster0']) ]['name'])
-	monster1 = index_of(monster_extra_array,monsters[ tostring(quest['monster1']) ]['name'])
-	monster2 = index_of(monster_extra_array,monsters[ tostring(quest['monster2']) ]['name'])
-	monster5 = index_of(monster_intruder_array,monsters[ tostring(quest['monster5']) ]['name'])
+	local monster_name = monsters[ tostring(quest['monster0']) ]['name']
+	local monster_rank = monsters[ tostring(quest['monster0']) ]['mystery_rank']
+	local string_ = monster_name..' - '..monster_rank
+	monster0 = index_of(monster_main_array,string_)
+
+	monster_name = monsters[ tostring(quest['monster1']) ]['name']
+	monster_rank = monsters[ tostring(quest['monster1']) ]['mystery_rank']
+	string_ = monster_name..' - '..monster_rank
+	monster1 = index_of(monster_extra_array,string_)
+
+	monster_name = monsters[ tostring(quest['monster2']) ]['name']
+	monster_rank = monsters[ tostring(quest['monster2']) ]['mystery_rank']
+	string_ = monster_name..' - '..monster_rank
+	monster2 = index_of(monster_extra_array,string_)
+
+	monster_name = monsters[ tostring(quest['monster5']) ]['name']
+	if monster_name == 'None' then
+		string_ = 'None'
+	else
+		monster_rank = monsters[ tostring(quest['monster5']) ]['mystery_rank']
+		string_ = monster_name..' - '..monster_rank
+	end
+	monster5 = index_of(monster_intruder_array,string_)
 
 	change_vals = false
 end
 
 local function quest_check(mystery_data)
 	force_check = true
-	auth_status = check_auth:call(get_questman(),mystery_data)
+	auth_status = check_auth:call(get_questman(),mystery_data,false)
 	force_check = false
 	auth_check = false
 end
@@ -463,7 +487,7 @@ sdk.hook(check_auth,
 	function(args)
 		end,
 	function(retval)
-		if force_auth_pass and not force_check then
+		if force_auth_pass and qc_open and not force_check then
 			return sdk.to_ptr(0)
 		else
 			return retval
@@ -492,6 +516,7 @@ if sdk.get_managed_singleton('snow.gui.fsm.questcounter.GuiQuestCounterFsmManage
 re.on_frame(function()
 	if not reframework:is_drawing_ui() then
 	    is_opened = false
+	    valid_combinations = false
 	end
 end
 )
@@ -508,7 +533,6 @@ re.on_draw_ui(function()
 
         if imgui.begin_window("Anomaly Investigations Editor "..version, is_opened, window_flags) then
 
-
 			if get_spacewatcher() then
 				game_state = get_spacewatcher():get_field('_GameState')
 			end
@@ -522,7 +546,10 @@ re.on_draw_ui(function()
 					reset_data()
 				end
 
-				if map_c then get_arrays() end
+				if map_c then
+					get_arrays()
+					tn_c = true
+				end
 
 				if filter_c then filter_names() end
 
@@ -585,6 +612,7 @@ re.on_draw_ui(function()
 						monster5 = index_of(monster_intruder_array,monsters[ tostring(quest['monster5']) ]['name'])
 					end
 
+					imgui.text('Name - Mystery Rank')
 					_,monster0 = imgui.combo('Monster 1',monster0,monster_main_array)
 					_,monster1 = imgui.combo('Monster 2',monster1,monster_extra_array)
 					_,monster2 = imgui.combo('Monster 3',monster2,monster_extra_array)
@@ -604,6 +632,9 @@ re.on_draw_ui(function()
 					monster5_id = monsters_id_table[ monster_intruder_array[ monster5 ] ]
 
 					if imgui.button('Edit Quest') then edit_quest(quest['data']) end
+					imgui.same_line()
+					if imgui.button('Valid Combinations') then valid_combinations = true end
+
 					imgui.new_line()
 
 					_,rand_id = imgui.combo('Random Quest Rank',rand_id,rand_rank_array)
@@ -639,6 +670,59 @@ re.on_draw_ui(function()
 					if id_c or auth_check then quest_check(quest['data']) end
 
 					if change_vals and dumped then reset_input() end
+
+					if valid_combinations then
+
+					    imgui.set_next_window_pos(Vector2f.new(630, 50), 1 << 3, window_pivot)
+	    				imgui.set_next_window_size(Vector2f.new(850, 310), 1 << 3)
+
+						if imgui.begin_window("Valid Combinations", valid_combinations, window_flags) then
+							if imgui.begin_table('1',10, 0x1278016384) then
+								for row=0,6 do
+
+									if (row % 2 == 0) then
+										imgui.table_next_row()
+									else
+										imgui.table_next_row(table_row_flags)
+									end
+
+									for col=0,9 do
+										imgui.table_set_column_index(col)
+										imgui.text(table_2[row+1][col+1])
+									end
+
+								end
+								imgui.end_table()
+							end
+							imgui.new_line()
+							if imgui.begin_table('2',4, 0x780) then
+								for row=0,1 do
+
+									if (row % 2 == 0) then
+										imgui.table_next_row()
+									else
+										imgui.table_next_row(table_row_flags)
+									end
+
+									for col=0,3 do
+										imgui.table_set_column_index(col)
+										imgui.text(table_3[row+1][col+1])
+									end
+
+								end
+								imgui.end_table()
+							end
+							imgui.new_line()
+							imgui.text('Quest cant have duplicate monsters.')
+							imgui.text('Quest cant have two Apex monsters.')
+							imgui.text('Apex monsters cant be intruders.')
+							imgui.end_window()
+						else
+							if valid_combinations then imgui.end_window() end
+							valid_combinations = false
+						end
+					end
+
 				end
 			end
 			prev_game_state = game_state
@@ -646,6 +730,7 @@ re.on_draw_ui(function()
         else
         	if is_opened then imgui.end_window() end
         	is_opened = false
+        	valid_combinations = false
         end
     end
 end)
