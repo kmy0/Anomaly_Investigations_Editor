@@ -1,20 +1,4 @@
 {
-    "-1": {
-        "capture": false,
-        "main": true,
-        "maps": {
-            "0": true,
-            "1": true,
-            "12": true,
-            "13": true,
-            "2": true,
-            "3": true,
-            "4": true,
-            "5": true
-        },
-        "mystery_rank": 11,
-        "name": "Random"
-    },
     "0": {
         "capture": false,
         "main": false,
@@ -28,7 +12,7 @@
             "4": false,
             "5": false
         },
-        "mystery_rank": 11,
+        "mystery_rank": "",
         "name": "None"
     },
     "1": {
