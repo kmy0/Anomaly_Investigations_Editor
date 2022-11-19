@@ -13,7 +13,7 @@ local main_window = {
 	pos=Vector2f.new(50, 50),
 	pivot=Vector2f.new(0, 0),
 	size=Vector2f.new(560, 820),
-	condition=0x1000,
+	condition=1 << 3,
 	is_opened=false
 }
 local sub_window = {
@@ -21,7 +21,7 @@ local sub_window = {
 	pos=Vector2f.new(630, 50),
 	pivot=Vector2f.new(0, 0),
 	size=Vector2f.new(850, 350),
-	condition=0x1000,
+	condition=1 << 3,
 	is_opened=false
 }
 local table_1 = {
@@ -397,7 +397,10 @@ local function edit_quest(mystery_data)
 	data.em_types:call('set_Item',2,tonumber(monster_picks.monster2.id))
 	data.em_types:call('set_Item',5,tonumber(monster_picks.monster5.id))
 
+	if monster_picks.monster1.id == '0' then default.mon1_cond = 0 end
+	if monster_picks.monster2.id == '0' then default.mon2_cond = 0 end
 	if monster_picks.monster5.id == '0' then default.mon5_cond = 0 end
+
 
 	data.em_cond = mystery_data:get_field('_BossSetCondition')
 	data.em_cond:call('set_Item',0,default.mon0_cond)
@@ -664,17 +667,6 @@ re.on_draw_ui(function()
 					reset_data(true)
 				end
 
-				if changed.map then
-					get_arrays()
-					if maps.invalid[ maps.array[user_input.map] ] then
-						aie.target_num_cap = 1
-						user_input.target_num = 1
-					else
-						aie.target_num_cap = 3
-					end
-					changed.target_num = true
-				end
-
 				if changed.filter then filter_names() end
 
 				_,authorization.force_pass = imgui.checkbox('Force Authorization Pass', authorization.force_pass)
@@ -683,6 +675,35 @@ re.on_draw_ui(function()
 		        quest_pick.quest = mystery_quests.data[ mystery_quests.names_filtered[ user_input.quest_pick ] ]
 
 		        if quest_pick.quest then
+
+					if changed.map then
+						get_arrays()
+						if maps.invalid[ maps.array[user_input.map] ] then
+							aie.target_num_cap = 1
+							user_input.target_num = 1
+						else
+							aie.target_num_cap = 3
+						end
+						changed.target_num = true
+					end
+
+					if changed.target_num then
+						if maps.invalid[ maps.array[user_input.map] ] then
+							monster_arrays.extra.current = {'None - 0'}
+							monster_arrays.intruder.current = {'None - 0'}
+						else
+							if user_input.target_num < 3 then
+								monster_arrays.intruder.current = monster_arrays.intruder.map_valid
+								monster_picks.monster5.pick = get_monster_pick(monster_arrays.intruder.current,quest_pick.quest.monster5)
+							else
+								monster_arrays.intruder.current = {'None - 0'}
+							end
+						end
+					end
+
+					if changed.quest then aie.reload = true end
+
+					if changed.quest or authorization.check then quest_check(quest_pick.quest.data) end
 
 					if aie.reload and mystery_quests.dumped then reset_input() end
 
@@ -734,21 +755,6 @@ re.on_draw_ui(function()
 					changed.map,user_input.map = imgui.combo('Map',user_input.map,maps.array)
 					imgui.new_line()
 
-					if changed.target_num then
-						if maps.invalid[ maps.array[user_input.map] ] then
-							monster_arrays.extra.current = {'None - 0'}
-							monster_arrays.intruder.current = {'None - 0'}
-						else
-							if user_input.target_num < 3 then
-								monster_arrays.intruder.current = monster_arrays.intruder.map_valid
-								monster_picks.monster5.pick = get_monster_pick(monster_arrays.intruder.current,quest.monster5)
-							else
-								monster_arrays.intruder.current= {'None - 0'}
-							end
-						end
-
-					end
-
 					imgui.text('Name - Mystery Rank')
 					_,monster_picks.monster0.pick = imgui.combo('Monster 1',monster_picks.monster0.pick,monster_arrays.main.current)
 					_,monster_picks.monster1.pick = imgui.combo('Monster 2',monster_picks.monster1.pick,monster_arrays.extra.current)
@@ -785,12 +791,6 @@ re.on_draw_ui(function()
 					imgui.same_line()
 					if imgui.button('Delete Quests') then wipe() end
 
-					if changed.quest then aie.reload = true end
-
-					if changed.quest or authorization.check then quest_check(quest_pick.quest.data) end
-
-					if aie.reload and mystery_quests.dumped then reset_input() end
-
 					if sub_window.is_opened then
 
 					    imgui.set_next_window_pos(sub_window.pos, sub_window.condition, sub_window.pivot)
@@ -811,7 +811,6 @@ re.on_draw_ui(function()
 							sub_window.is_opened = false
 						end
 					end
-
 				end
 			end
 			game_state.previous = game_state.current
