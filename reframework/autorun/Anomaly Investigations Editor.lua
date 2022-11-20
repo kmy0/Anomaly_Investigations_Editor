@@ -12,13 +12,13 @@ local main_window = {
 	flags=0x10120,
 	pos=Vector2f.new(50, 50),
 	pivot=Vector2f.new(0, 0),
-	size=Vector2f.new(560, 820),
+	size=Vector2f.new(560, 890),
 	condition=1 << 3,
 	is_opened=false
 }
 local sub_window = {
 	flags=0x10120,
-	pos=Vector2f.new(630, 50),
+	pos=nil,
 	pivot=Vector2f.new(0, 0),
 	size=Vector2f.new(850, 350),
 	condition=1 << 3,
@@ -138,7 +138,18 @@ local tod = {
 		'Night'
 	}
 }
-local monster_picks = {
+local user_input = {
+	map=1,
+	quest_lvl=1,
+	quest_life=3,
+	time_limit=50,
+	hunter_num=4,
+	tod=1,
+	target_num=1,
+	rand=0,
+	quest_pick=1,
+	filter='',
+	amount_to_generate=1,
 	monster0={
 		pick=1,
 		id=nil
@@ -154,19 +165,7 @@ local monster_picks = {
 	monster5={
 		pick=1,
 		id=nil
-	},
-}
-local user_input = {
-	map=1,
-	quest_lvl=1,
-	quest_life=3,
-	time_limit=50,
-	hunter_num=4,
-	tod=1,
-	target_num=1,
-	rand=0,
-	quest_pick=1,
-	filter=''
+	}
 }
 local game_state = {
 	current=0,
@@ -202,7 +201,12 @@ local authorization = {
 local aie = {
 	reload=true,
 	quest_counter_open=false,
-	target_num_cap=3
+	target_num_cap=3,
+	max_quest_count=120,
+	max_quest_level=200,
+	max_quest_life=9,
+	max_quest_time_limit=50,
+	max_quest_hunter_num=4,
 }
 
 
@@ -277,14 +281,21 @@ local function get_mystery_quest_data_table()
         	if not maps.id_table[quest.map] then goto continue end
 
         	quest.monsters = quest.data:get_field('_BossEmType')
-        	quest.monster0 = quest.monsters:call('get_Item',0)
+
+        	for _,idx in pairs({0,1,2,5}) do
+
+        		quest['monster'..idx] = quest.monsters:call('get_Item',idx)
+
+        		if not monsters.data[ tostring(quest['monster'..idx]) ] then goto continue end
+        	end
+
         	quest.lvl = quest.data:get_field('_QuestLv')
             quest.key = monsters.data[ tostring(quest.monster0) ].name .. '  -  '.. quest.lvl .. '  -  ' .. maps.id_table[quest.map] .. '  -  ' .. quest.no
 
             table.insert(mystery_quests.names,quest.key)
 
             mystery_quests.data[ quest.key ] = {
-            						quest_no=quest.no,
+            						_QuestNo=quest.no,
             						sort=quest.data:get_field('_Idx'),
             						name=key,
             						index=i,
@@ -295,9 +306,9 @@ local function get_mystery_quest_data_table()
                                     _BaseTime=quest.data:get_field('_BaseTime'),
                                     _HuntTargetNum=quest.data:get_field('_HuntTargetNum'),
                                     monster0=quest.monster0,
-                                    monster1=quest.monsters:call('get_Item',1),
-                                    monster2=quest.monsters:call('get_Item',2),
-                                    monster5=quest.monsters:call('get_Item',5),
+                                    monster1=quest.monster1,
+                                    monster2=quest.monster2,
+                                    monster5=quest.monster5,
                                     _TimeLimit=quest.data:get_field('_TimeLimit'),
                                     _QuestLife=quest.data:get_field('_QuestLife'),
                                     _StartTime=quest.data:get_field('_StartTime'),
@@ -349,17 +360,31 @@ local function generate_random(id)
 end
 
 local function edit_quest(mystery_data)
-	if mystery_quests.count == 1 then return end
+	if mystery_quests.count == 1 or mystery_data:get_field('_IsLock') then return end
 
 	local quest_save_data = get_questman():get_field('<SaveData>k__BackingField')
 	local mystery_seeds = quest_save_data:get_field('_RandomMysteryQuestSeed')
 	local data = {}
 	local default = {
+		[1]={
+			mon0_cond=1,
+			mon1_cond=14,
+			mon2_cond=14,
+			mon5_cond=15,
+		},
+		[2]={
+			mon0_cond=1,
+			mon1_cond=1,
+			mon2_cond=14,
+			mon5_cond=15,
+		},
+		[3]={
+			mon0_cond=3,
+			mon1_cond=1,
+			mon2_cond=1,
+			mon5_cond=0,
+		},
 		quest_type=2,
-		mon0_cond=1,
-		mon1_cond=14,
-		mon2_cond=14,
-		mon5_cond=15,
 	}
 
 	if not mystery_data then
@@ -367,8 +392,8 @@ local function edit_quest(mystery_data)
 		return
 	end
 
-	if user_input.target_num == 2 and monsters.data[monster_picks.monster1.id].capture
-	or user_input.target_num == 3 and (monsters.data[monster_picks.monster1.id].capture or monsters.data[monster_picks.monster2.id].capture) then
+	if user_input.target_num == 2 and monsters.data[user_input.monster1.id].capture
+	or user_input.target_num == 3 and (monsters.data[user_input.monster1.id].capture or monsters.data[user_input.monster2.id].capture) then
 		default.quest_type = 1
 	end
 
@@ -382,36 +407,27 @@ local function edit_quest(mystery_data)
 	mystery_data:set_field('_QuestLv',user_input.quest_lvl)
 	mystery_data:set_field('_IsNewFlag',true)
 
-	if user_input.target_num == 2 then
-		default.mon1_cond = 1
-	elseif user_input.target_num == 3 then
-		default.mon0_cond = 3
-		default.mon1_cond = 1
-		default.mon2_cond = 1
-		monster_picks.monster5.id = '0'
-	end
 
 	data.em_types = mystery_data:get_field('_BossEmType')
-	data.em_types:call('set_Item',0,tonumber(monster_picks.monster0.id))
-	data.em_types:call('set_Item',1,tonumber(monster_picks.monster1.id))
-	data.em_types:call('set_Item',2,tonumber(monster_picks.monster2.id))
-	data.em_types:call('set_Item',5,tonumber(monster_picks.monster5.id))
+	data.em_types:call('set_Item',0,tonumber(user_input.monster0.id))
+	data.em_types:call('set_Item',1,tonumber(user_input.monster1.id))
+	data.em_types:call('set_Item',2,tonumber(user_input.monster2.id))
+	data.em_types:call('set_Item',5,tonumber(user_input.monster5.id))
 
-	if monster_picks.monster1.id == '0' then default.mon1_cond = 0 end
-	if monster_picks.monster2.id == '0' then default.mon2_cond = 0 end
-	if monster_picks.monster5.id == '0' then default.mon5_cond = 0 end
-
+	if user_input.monster1.id == 0 then default[user_input.target_num].mon1_cond = 0 end
+	if user_input.monster2.id == 0 then default[user_input.target_num].mon2_cond = 0 end
+	if user_input.monster5.id == 0 then default[user_input.target_num].mon5_cond = 0 end
 
 	data.em_cond = mystery_data:get_field('_BossSetCondition')
-	data.em_cond:call('set_Item',0,default.mon0_cond)
-	data.em_cond:call('set_Item',1,default.mon1_cond)
-	data.em_cond:call('set_Item',2,default.mon2_cond)
-	data.em_cond:call('set_Item',5,default.mon5_cond)
+	data.em_cond:call('set_Item',0,default[user_input.target_num].mon0_cond)
+	data.em_cond:call('set_Item',1,default[user_input.target_num].mon1_cond)
+	data.em_cond:call('set_Item',2,default[user_input.target_num].mon2_cond)
+	data.em_cond:call('set_Item',5,default[user_input.target_num].mon5_cond)
 
 	data.swap_cond = mystery_data:get_field('_SwapSetCondition')
 	data.swap_param = mystery_data:get_field('_SwapSetParam')
 
-	if monster_picks.monster5.id == '0' then
+	if user_input.monster5.id == 0 then
 		data.swap_cond:call('set_Item',0,0)
 		data.swap_param:call('set_Item',0,0)
 		mystery_data:set_field('_SwapStopType',0)
@@ -423,7 +439,7 @@ local function edit_quest(mystery_data)
 		mystery_data:set_field('_SwapExecType',1)
 	end
 
-	mystery_data:set_field('_MainTargetMysteryRank',monsters.data[monster_picks.monster0.id].mystery_rank)
+	mystery_data:set_field('_MainTargetMysteryRank',monsters.data[user_input.monster0.id].mystery_rank)
 
 	data.seed = get_questman():call('getRandomQuestSeedFromQuestNo',mystery_data:get_field('_QuestNo'))
 	data.seed_index = mystery_seeds:call('IndexOf',data.seed)
@@ -438,7 +454,7 @@ local function edit_quest(mystery_data)
 	data.seed:set_field('_QuestLife',user_input.quest_life)
 	data.seed:set_field('_QuestOrderNum',user_input.hunter_num)
 	data.seed:set_field('_StartTime',tod.data[ tod.array[ user_input.tod ] ])
-	data.seed:set_field('_MysteryLv',200)
+	data.seed:set_field('_MysteryLv',aie.max_quest_level)
 	data.seed:call('setEnemyTypes',data.em_types)
 	mystery_seeds:call('set_Item',data.seed_index,data.seed)
 
@@ -455,10 +471,10 @@ local function get_arrays()
 	monster_arrays.extra.map_valid = {}
 	monster_arrays.intruder.map_valid = {}
 
-	monster_picks.monster0.pick = 1
-	monster_picks.monster1.pick = 2
-	monster_picks.monster2.pick = 3
-	monster_picks.monster5.pick = 1
+	user_input.monster0.pick = 1
+	user_input.monster1.pick = 2
+	user_input.monster2.pick = 3
+	user_input.monster5.pick = 1
 
 	for name,id in pairs(monsters.id_table) do
 		if monsters.data[id].maps[map_id] then
@@ -471,6 +487,7 @@ local function get_arrays()
 	end
 
 	table.insert(monster_arrays.intruder.map_valid,'None - 0')
+	table.insert(monster_arrays.extra.map_valid,'None - 0')
 
 	table.sort(monster_arrays.main.map_valid)
 	table.sort(monster_arrays.extra.map_valid)
@@ -539,10 +556,10 @@ local function reset_input()
 		monster_arrays.intruder.current = {'None - 0'}
 	end
 
-	monster_picks.monster0.pick = get_monster_pick(monster_arrays.main.current,quest_pick.quest.monster0)
-	monster_picks.monster1.pick= get_monster_pick(monster_arrays.extra.current,quest_pick.quest.monster1)
-	monster_picks.monster2.pick = get_monster_pick(monster_arrays.extra.current,quest_pick.quest.monster2)
-	monster_picks.monster5.pick = get_monster_pick(monster_arrays.intruder.current,quest_pick.quest.monster5)
+	user_input.monster0.pick = get_monster_pick(monster_arrays.main.current,quest_pick.quest.monster0)
+	user_input.monster1.pick = get_monster_pick(monster_arrays.extra.current,quest_pick.quest.monster1)
+	user_input.monster2.pick = get_monster_pick(monster_arrays.extra.current,quest_pick.quest.monster2)
+	user_input.monster5.pick = get_monster_pick(monster_arrays.intruder.current,quest_pick.quest.monster5)
 
 	aie.reload = false
 end
@@ -565,7 +582,7 @@ local function wipe()
 	local mystery_seeds = quest_save_data:get_field('_RandomMysteryQuestSeed')
 	local data = {}
 
-	data.newest_quest_no = mystery_quests.data[ mystery_quests.names[1] ].quest_no
+	data.newest_quest_no = mystery_quests.data[ mystery_quests.names[1] ]._QuestNo
 
 	for _,quest in ipairs(mystery_quest_data) do
 		data.no = quest:get_field('_QuestNo')
@@ -578,6 +595,17 @@ local function wipe()
 		end
 	end
 	reset_data(true)
+end
+
+local function lock_unlock_quest(quest)
+	local quest_save_data = get_questman():get_field('<SaveData>k__BackingField')
+	local mystery_seeds = quest_save_data:get_field('_RandomMysteryQuestSeed')
+	local seed = get_questman():call('getRandomQuestSeedFromQuestNo',quest.data._QuestNo)
+	local seed_index = mystery_seeds:call('IndexOf',seed)
+	quest.data._IsLock = not quest.data._IsLock
+	quest._IsLock = not quest._IsLock
+	seed:set_field('_IsLock',quest._IsLoc)
+	mystery_seeds:call('set_Item',seed_index,seed)
 end
 
 local function create_table(tbl)
@@ -598,6 +626,12 @@ local function create_table(tbl)
 		end
 		imgui.end_table()
 	end
+end
+
+local function get_sub_window_pos()
+	local main_window_pos = imgui.get_window_pos()
+	local main_window_size = imgui.get_window_size()
+	sub_window.pos = Vector2f.new(main_window_pos.x + main_window_size.x, main_window_pos.y)
 end
 
 
@@ -694,7 +728,7 @@ re.on_draw_ui(function()
 						else
 							if user_input.target_num < 3 then
 								monster_arrays.intruder.current = monster_arrays.intruder.map_valid
-								monster_picks.monster5.pick = get_monster_pick(monster_arrays.intruder.current,quest_pick.quest.monster5)
+								user_input.monster5.pick = get_monster_pick(monster_arrays.intruder.current,quest_pick.quest.monster5)
 							else
 								monster_arrays.intruder.current = {'None - 0'}
 							end
@@ -750,49 +784,62 @@ re.on_draw_ui(function()
 			        imgui.same_line()
 			        imgui.text_colored(mystery_quests.count, 0xff27f3f5)
 			        imgui.same_line()
-			        imgui.text('/  120')
+			        imgui.text('/  '..aie.max_quest_count)
 
 					changed.map,user_input.map = imgui.combo('Map',user_input.map,maps.array)
 					imgui.new_line()
 
 					imgui.text('Name - Mystery Rank')
-					_,monster_picks.monster0.pick = imgui.combo('Monster 1',monster_picks.monster0.pick,monster_arrays.main.current)
-					_,monster_picks.monster1.pick = imgui.combo('Monster 2',monster_picks.monster1.pick,monster_arrays.extra.current)
-					_,monster_picks.monster2.pick = imgui.combo('Monster 3',monster_picks.monster2.pick,monster_arrays.extra.current)
-					_,monster_picks.monster5.pick = imgui.combo('Intruder',monster_picks.monster5.pick,monster_arrays.intruder.current)
+					_,user_input.monster0.pick = imgui.combo('Monster 1',user_input.monster0.pick,monster_arrays.main.current)
+					_,user_input.monster1.pick = imgui.combo('Monster 2',user_input.monster1.pick,monster_arrays.extra.current)
+					_,user_input.monster2.pick = imgui.combo('Monster 3',user_input.monster2.pick,monster_arrays.extra.current)
+					_,user_input.monster5.pick = imgui.combo('Intruder',user_input.monster5.pick,monster_arrays.intruder.current)
 
 					imgui.new_line()
 					_,user_input.tod = imgui.combo('Time of Day',user_input.tod,tod.array)
-					_,user_input.quest_lvl = imgui.slider_int('Quest Level', user_input.quest_lvl, 1, 200)
+					_,user_input.quest_lvl = imgui.slider_int('Quest Level', user_input.quest_lvl, 1, aie.max_quest_level)
 					changed.target_num,user_input.target_num = imgui.slider_int('Target Num', user_input.target_num, 1, aie.target_num_cap)
-					_,user_input.quest_life = imgui.slider_int('Quest Life', user_input.quest_life, 1, 9)
-					_,user_input.time_limit = imgui.slider_int('Time Limit', user_input.time_limit, 1, 50)
-					_,user_input.hunter_num = imgui.slider_int('Hunter Num', user_input.hunter_num, 1, 4)
+					_,user_input.quest_life = imgui.slider_int('Quest Life', user_input.quest_life, 1, aie.max_quest_life)
+					_,user_input.time_limit = imgui.slider_int('Time Limit', user_input.time_limit, 1, aie.max_quest_time_limit)
+					_,user_input.hunter_num = imgui.slider_int('Hunter Num', user_input.hunter_num, 1, aie.max_quest_hunter_num)
 
-					monster_picks.monster0.id = monsters.id_table[ monster_arrays.main.current[ monster_picks.monster0.pick ] ]
-					monster_picks.monster1.id  = monsters.id_table[ monster_arrays.extra.current[ monster_picks.monster1.pick ] ]
-					monster_picks.monster2.id  = monsters.id_table[ monster_arrays.extra.current[ monster_picks.monster2.pick ] ]
-					monster_picks.monster5.id  = monsters.id_table[ monster_arrays.intruder.current[ monster_picks.monster5.pick ] ]
+					user_input.monster0.id = monsters.id_table[ monster_arrays.main.current[ user_input.monster0.pick ] ]
+					user_input.monster1.id = monsters.id_table[ monster_arrays.extra.current[ user_input.monster1.pick ] ]
+					user_input.monster2.id = monsters.id_table[ monster_arrays.extra.current[ user_input.monster2.pick ] ]
+					user_input.monster5.id = monsters.id_table[ monster_arrays.intruder.current[ user_input.monster5.pick ] ]
 
 					if imgui.button('Edit Quest') then edit_quest(quest_pick.quest.data) end
+					imgui.same_line()
+					if imgui.button('Lock/Unlock') then lock_unlock_quest(quest_pick.quest) end
 					imgui.same_line()
 					if imgui.button('Valid Combinations') then sub_window.is_opened = true end
 
 					imgui.new_line()
 
 					_,user_input.rand = imgui.combo('Random Quest Rank',user_input.rand,rand_rank.array)
+					_,user_input.amount_to_generate = imgui.slider_int('Amount', user_input.amount_to_generate, 1, aie.max_quest_count - 1)
 
 					if imgui.tree_node('Probabilities at 120 Research Level') then
 						create_table(table_1)
 						imgui.tree_pop()
 					end
 
-					if imgui.button('Generate Random Quest') then generate_random(rand_rank.data[ rand_rank.array[user_input.rand] ]) end
+					if imgui.button('Generate Random Quest') then
+						local amount = user_input.amount_to_generate
+						if mystery_quests.count + amount > aie.max_quest_count then
+							amount = aie.max_quest_count - mystery_quests.count
+						end
+						for i=1,amount do
+							generate_random(rand_rank.data[ rand_rank.array[user_input.rand] ])
+						end
+					end
+
 					imgui.same_line()
 					if imgui.button('Delete Quests') then wipe() end
 
 					if sub_window.is_opened then
 
+						get_sub_window_pos()
 					    imgui.set_next_window_pos(sub_window.pos, sub_window.condition, sub_window.pivot)
 	    				imgui.set_next_window_size(sub_window.size, sub_window.condition)
 
