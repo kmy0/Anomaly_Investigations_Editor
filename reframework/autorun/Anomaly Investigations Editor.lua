@@ -28,16 +28,17 @@ local table_1 = {
 	name='1',
 	flags=0x12780,
 	row_flags=0x1,
-	col_count=8,
-	row_count=7,
+	col_count=9,
+	row_count=8,
 	data={
-		{'','1    ','1-4','1-5','2-6','3-6','4-6','5-6'},
-		{'1',100,25,10,0,0,0,0},
-		{'2',0,40,25,10,0,0,0},
-		{'3',0,30,35,25,15,0,0},
-		{'4',0,5,25,40,30,20,0},
-		{'5',0,0,5,20,40,35,35},
-		{'6',0,0,0,5,15,45,65},
+		{'','1    ','1-4','1-5','2-6','3-7','4-7','5-7','6-7'},
+		{'1',100,25,10,0,0,0,0,0},
+		{'2',0,43,25,10,0,0,0,0},
+		{'3',0,27,37,25,15,0,0,0},
+		{'4',0,5,23,37,30,15,0,0},
+		{'5',0,0,5,23,37,32,23,0},
+		{'6',0,0,0,5,15,38,40,37},
+		{'7',0,0,0,0,3,15,37,63},
 	}
 }
 local table_2 = {
@@ -47,8 +48,8 @@ local table_2 = {
 	col_count=10,
 	row_count=8,
 	data={
-		{'Quest Level','1-10','11-20','21-30','31-40','41-50','51-60','61-70','71-80','81-120'},
-		{'Main Target Mystery Rank','0','0-1','0-2','0-3','0-3','0-4','0-4','0-5','0-5'},
+		{'Quest Level','1-10','11-20','21-30','31-40','41-50','51-60','61-70','71-90','91-200'},
+		{'Main Target Mystery Rank','0','0-1','0-2','0-3','0-3','0-4','0-4','0-5','0-6'},
 		{'Sub Target Mystery Rank','-','-','0-3,11(Apex)','0-5,11(Apex)','0-5,11','0-5,11','0-6,11','0-6,11','0-6,11'},
 		{'Extra Target Mystery Rank','0-1','0-2','0-3','0-5','0-5,11(ED)','0-5,11(ED)','0-6,11(ED)','0-6,11(ED)','0-6,11(ED)'},
 		{'Target Num','1','1','1-2','1-2','1-3','1-3','1-3','1-3','1-3'},
@@ -120,9 +121,10 @@ local rand_rank = {
 		['1-4']=107,
 		['1-5']=19,
 		['2-6']=1,
-		['3-6']=349,
-		['4-6']=351,
-		['5-6']=350
+		['3-7']=349,
+		['4-7']=351,
+		['5-7']=350,
+		['6-7']=1303
 	},
 	array={}
 }
@@ -297,7 +299,7 @@ local function get_mystery_quest_data_table()
             mystery_quests.data[ quest.key ] = {
             						_QuestNo=quest.no,
             						sort=quest.data:get_field('_Idx'),
-            						name=key,
+            						name=quest.key,
             						index=i,
                                     _QuestLv=quest.lvl,
                                     _IsLock=quest.data:get_field('_IsLock'),
@@ -350,7 +352,7 @@ local function generate_random(id)
 	 	return
 	end
 
-	mystery_data:set_field('_QuestLv',200)
+	mystery_data:set_field('_QuestLv',201)
 	mystery_data:get_field('_BossEmType'):call('set_Item',0,id)
 
 	create_random_mystery_quest:call(get_questman(),mystery_data,1,mystery_index,mystery_quest_no,true)
@@ -406,6 +408,7 @@ local function edit_quest(mystery_data)
 	mystery_data:set_field('_StartTime',tod.data[ tod.array[ user_input.tod ] ])
 	mystery_data:set_field('_QuestLv',user_input.quest_lvl)
 	mystery_data:set_field('_IsNewFlag',true)
+	mystery_data:set_field('_OriginQuestLv',0)
 
 
 	data.em_types = mystery_data:get_field('_BossEmType')
@@ -455,6 +458,7 @@ local function edit_quest(mystery_data)
 	data.seed:set_field('_QuestOrderNum',user_input.hunter_num)
 	data.seed:set_field('_StartTime',tod.data[ tod.array[ user_input.tod ] ])
 	data.seed:set_field('_MysteryLv',aie.max_quest_level)
+	data.seed:set_field('_OriginQuestLv',0)
 	data.seed:call('setEnemyTypes',data.em_types)
 	mystery_seeds:call('set_Item',data.seed_index,data.seed)
 
@@ -819,7 +823,7 @@ re.on_draw_ui(function()
 					_,user_input.rand = imgui.combo('Random Quest Rank',user_input.rand,rand_rank.array)
 					_,user_input.amount_to_generate = imgui.slider_int('Amount', user_input.amount_to_generate, 1, aie.max_quest_count - 1)
 
-					if imgui.tree_node('Probabilities at 120 Research Level') then
+					if imgui.tree_node('Probabilities at 200 Research Level') then
 						create_table(table_1)
 						imgui.tree_pop()
 					end
