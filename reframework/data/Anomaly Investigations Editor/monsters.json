@@ -12,7 +12,7 @@
             "4": false,
             "5": false
         },
-        "mystery_rank": "",
+        "mystery_rank": 0,
         "name": "None"
     },
     "1": {
@@ -110,7 +110,7 @@
     },
     "1303": {
         "capture": true,
-        "main": false,
+        "main": true,
         "maps": {
             "0": true,
             "1": true,
@@ -159,6 +159,15 @@
         "mystery_rank": 3,
         "name": "Garangolm"
     },
+    "1351": {
+        "capture": true,
+        "main": false,
+        "maps": {
+            "0": true
+        },
+        "mystery_rank": 11,
+        "name": "Chaotic Gore Magala"
+    },
     "136": {
         "capture": true,
         "main": true,
@@ -189,7 +198,7 @@
     },
     "1369": {
         "capture": true,
-        "main": false,
+        "main": true,
         "maps": {
             "1": true,
             "13": true,
@@ -198,6 +207,22 @@
         },
         "mystery_rank": 6,
         "name": "Scorned Magnamalo"
+    },
+    "1398": {
+        "capture": true,
+        "main": true,
+        "maps": {
+            "0": true,
+            "1": true,
+            "12": true,
+            "13": true,
+            "2": true,
+            "3": true,
+            "4": true,
+            "5": true
+        },
+        "mystery_rank": 6,
+        "name": "Seething Bazelgeuse"
     },
     "1793": {
         "capture": false,
@@ -213,6 +238,18 @@
         "mystery_rank": 11,
         "name": "Apex Rathian"
     },
+    "1794": {
+        "capture": false,
+        "main": false,
+        "maps": {
+            "0": true,
+            "1": true,
+            "13": true,
+            "5": true
+        },
+        "mystery_rank": 11,
+        "name": "Apex Rathalos"
+    },
     "1852": {
         "capture": false,
         "main": false,
@@ -224,6 +261,18 @@
         },
         "mystery_rank": 11,
         "name": "Apex Arzuros"
+    },
+    "1874": {
+        "capture": false,
+        "main": false,
+        "maps": {
+            "1": true,
+            "12": true,
+            "3": true,
+            "4": true
+        },
+        "mystery_rank": 11,
+        "name": "Apex Mizutsune"
     },
     "19": {
         "capture": true,
@@ -391,6 +440,16 @@
         "mystery_rank": 3,
         "name": "Nargacuga"
     },
+    "392": {
+        "capture": true,
+        "main": true,
+        "maps": {
+            "0": true,
+            "13": true
+        },
+        "mystery_rank": 6,
+        "name": "Flaming Espinas"
+    },
     "4": {
         "capture": true,
         "main": true,
@@ -435,6 +494,32 @@
         "mystery_rank": 1,
         "name": "Royal Ludroth"
     },
+    "513": {
+        "capture": true,
+        "main": true,
+        "maps": {
+            "0": true,
+            "1": true,
+            "12": true,
+            "2": true,
+            "3": true,
+            "5": true
+        },
+        "mystery_rank": 6,
+        "name": "Gold Rathian"
+    },
+    "514": {
+        "capture": true,
+        "main": true,
+        "maps": {
+            "0": true,
+            "1": true,
+            "13": true,
+            "5": true
+        },
+        "mystery_rank": 6,
+        "name": "Silver Rathalos"
+    },
     "54": {
         "capture": true,
         "main": true,
@@ -444,6 +529,15 @@
         },
         "mystery_rank": 0,
         "name": "Great Baggi"
+    },
+    "549": {
+        "capture": true,
+        "main": false,
+        "maps": {
+            "0": true
+        },
+        "mystery_rank": 11,
+        "name": "Lucent Nargacuga"
     },
     "57": {
         "capture": true,
@@ -468,6 +562,15 @@
         },
         "mystery_rank": 0,
         "name": "Great Wroggi"
+    },
+    "594": {
+        "capture": true,
+        "main": false,
+        "maps": {
+            "0": true
+        },
+        "mystery_rank": 11,
+        "name": "Violet Mizutsune"
     },
     "60": {
         "capture": true,
@@ -675,86 +778,5 @@
         },
         "mystery_rank": 0,
         "name": "Great Izuchi"
-    },
-    "513": {
-        "capture": true,
-        "main": false,
-        "maps": {
-            "0": true,
-            "1": true,
-            "12": true,
-            "2": true,
-            "3": true,
-            "5": true
-        },
-        "mystery_rank": 6,
-        "name": "Gold Rathian"
-    },
-    "1398": {
-        "capture": true,
-        "main": false,
-        "maps": {
-            "0": true,
-            "1": true,
-            "12": true,
-            "13": true,
-            "2": true,
-            "3": true,
-            "4": true,
-            "5": true
-        },
-        "mystery_rank": 6,
-        "name": "Seething Bazelgeuse"
-    },
-    "514": {
-        "capture": true,
-        "main": false,
-        "maps": {
-            "0": true,
-            "1": true,
-            "5": true
-        },
-        "mystery_rank": 6,
-        "name": "Silver Rathalos"
-    },
-    "2073": {
-        "capture": false,
-        "main": false,
-        "maps": {
-            "1": true,
-            "12": true,
-            "13": true,
-            "3": true
-        },
-        "mystery_rank": 7,
-        "name": "Risen Chameleos"
-    },
-    "392": {
-        "capture": true,
-        "main": false,
-        "maps": {
-            "0": true,
-            "13": true
-        },
-        "mystery_rank": 6,
-        "name": "Flaming Espinas"
-    },
-    "549": {
-        "capture": true,
-        "main": false,
-        "maps": {
-            "0": true
-        },
-        "mystery_rank": 6,
-        "name": "Silverwind Nargacuga"
-    },
-    "594": {
-        "capture": true,
-        "main": false,
-        "maps": {
-            "0": true
-        },
-        "mystery_rank": 6,
-        "name": "Violet Mizutsune"
     }
 }
