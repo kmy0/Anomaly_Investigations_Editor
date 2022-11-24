@@ -200,6 +200,12 @@ local authorization = {
 	force_check=false,
 	check=true
 }
+local colors = {
+	bad=0xff1947ff,
+	good=0xff47ff59,
+	info=0xff27f3f5,
+	info_warn=0xff2787FF,
+}
 local aie = {
 	reload=true,
 	quest_counter_open=false,
@@ -403,10 +409,10 @@ local function edit_quest(mystery_data)
 	mystery_data:set_field('_HuntTargetNum',user_input.target_num)
 	mystery_data:set_field('_TimeLimit',user_input.time_limit)
 	mystery_data:set_field('_QuestLife',user_input.quest_life)
-	mystery_data:set_field('_QuestType',user_input.quest_type)
 	mystery_data:set_field('_QuestOrderNum',user_input.hunter_num)
 	mystery_data:set_field('_StartTime',tod.data[ tod.array[ user_input.tod ] ])
 	mystery_data:set_field('_QuestLv',user_input.quest_lvl)
+	mystery_data:set_field('_QuestType',default.quest_type)
 	mystery_data:set_field('_IsNewFlag',true)
 	mystery_data:set_field('_OriginQuestLv',0)
 
@@ -450,7 +456,6 @@ local function edit_quest(mystery_data)
 	if not data.seed or not data.seed_index then return end
 
 	data.seed:set_field('_QuestLv',user_input.quest_lvl)
-	data.seed:set_field('_QuestType',user_input.quest_type)
 	data.seed:set_field('_HuntTargetNum',user_input.target_num)
 	data.seed:set_field('_MapNo',maps.data[ maps.array[ user_input.map ] ])
 	data.seed:set_field('_TimeLimit',user_input.time_limit)
@@ -458,6 +463,7 @@ local function edit_quest(mystery_data)
 	data.seed:set_field('_QuestOrderNum',user_input.hunter_num)
 	data.seed:set_field('_StartTime',tod.data[ tod.array[ user_input.tod ] ])
 	data.seed:set_field('_MysteryLv',aie.max_quest_level)
+	data.seed:set_field('_QuestType',default.quest_type)
 	data.seed:set_field('_OriginQuestLv',0)
 	data.seed:call('setEnemyTypes',data.em_types)
 	mystery_seeds:call('set_Item',data.seed_index,data.seed)
@@ -608,7 +614,7 @@ local function lock_unlock_quest(quest)
 	local seed_index = mystery_seeds:call('IndexOf',seed)
 	quest.data._IsLock = not quest.data._IsLock
 	quest._IsLock = not quest._IsLock
-	seed:set_field('_IsLock',quest._IsLoc)
+	seed:set_field('_IsLock',quest._IsLock)
 	mystery_seeds:call('set_Item',seed_index,seed)
 end
 
@@ -697,7 +703,7 @@ re.on_draw_ui(function()
 			end
 
 			if aie.quest_counter_open or game_state.current ~= 4 or get_questman():call('isActiveQuest') then
-				imgui.text_colored('Mod works only in the lobby with quest counter closed.', 0xff1947ff)
+				imgui.text_colored('Mod works only in the lobby with quest counter closed.', colors.bad)
 			else
 
 				if get_questman() and not mystery_quests.dumped and game_state.current == 4
@@ -747,46 +753,46 @@ re.on_draw_ui(function()
 
 			        imgui.text('Quest Level: ')
 			        imgui.same_line()
-			        imgui.text_colored(quest_pick.quest._QuestLv, 0xff27f3f5)
+			        imgui.text_colored(quest_pick.quest._QuestLv, colors.info)
 			        imgui.text('Map: ')
 			        imgui.same_line()
-			        imgui.text_colored(maps.id_table[ quest_pick.quest._MapNo ], 0xff27f3f5)
+			        imgui.text_colored(maps.id_table[ quest_pick.quest._MapNo ], colors.info)
 			        imgui.text('Monster 1: ')
 					imgui.same_line()
-			        imgui.text_colored(monsters.data[ tostring(quest_pick.quest.monster0) ].name, 0xff27f3f5)
+			        imgui.text_colored(monsters.data[ tostring(quest_pick.quest.monster0) ].name, colors.info)
 			        imgui.text('Monster 2: ')
 			        imgui.same_line()
-			        imgui.text_colored(monsters.data[ tostring(quest_pick.quest.monster1) ].name, 0xff27f3f5)
+			        imgui.text_colored(monsters.data[ tostring(quest_pick.quest.monster1) ].name, colors.info)
 			        imgui.text('Monster 3: ')
 			        imgui.same_line()
-			        imgui.text_colored(monsters.data[ tostring(quest_pick.quest.monster2) ].name, 0xff27f3f5)
+			        imgui.text_colored(monsters.data[ tostring(quest_pick.quest.monster2) ].name, colors.info)
 			        imgui.text('Intruder: ')
 			        imgui.same_line()
-			        imgui.text_colored(monsters.data[ tostring(quest_pick.quest.monster5) ].name, 0xff27f3f5)
+			        imgui.text_colored(monsters.data[ tostring(quest_pick.quest.monster5) ].name, colors.info)
 			        imgui.text('Target Num: ')
 			        imgui.same_line()
-			        imgui.text_colored(quest_pick.quest._HuntTargetNum, 0xff27f3f5)
+			        imgui.text_colored(quest_pick.quest._HuntTargetNum, colors.info)
 			        imgui.text('Time Limit: ')
 			        imgui.same_line()
-			        imgui.text_colored(quest_pick.quest._TimeLimit, 0xff27f3f5)
+			        imgui.text_colored(quest_pick.quest._TimeLimit, colors.info)
 			        imgui.text('Quest Life: ')
 			        imgui.same_line()
-			        imgui.text_colored(quest_pick.quest._QuestLife, 0xff27f3f5)
+			        imgui.text_colored(quest_pick.quest._QuestLife, colors.info)
 			        imgui.text('Time of Day: ')
 			        imgui.same_line()
-			        imgui.text_colored(tod.array[ quest_pick.quest._StartTime +1], 0xff27f3f5)
+			        imgui.text_colored(tod.array[ quest_pick.quest._StartTime +1], colors.info)
 			        imgui.text('Hunter Num: ')
 			        imgui.same_line()
-			        imgui.text_colored(quest_pick.quest._QuestOrderNum, 0xff27f3f5)
+			        imgui.text_colored(quest_pick.quest._QuestOrderNum, colors.info)
 			        imgui.text('Lock: ')
 			        imgui.same_line()
-			        imgui.text_colored(quest_pick.quest._IsLock and 'Yes' or 'No', 0xff27f3f5)
+			        imgui.text_colored(quest_pick.quest._IsLock and 'Yes - Editing Disabled' or 'No', quest_pick.quest._IsLock and colors.info_warn or colors.info)
 			    	imgui.text('Auth Status: ')
 			    	imgui.same_line()
-			    	imgui.text_colored((authorization.status == 0 and "Pass" or authorization.data[authorization.status]), (authorization.force_pass and 0xff47ff59 or authorization.status == 0 and 0xff47ff59 or 0xff1947ff))
+			    	imgui.text_colored((authorization.status == 0 and "Pass" or authorization.data[authorization.status]), (authorization.force_pass and colors.good or authorization.status == 0 and colors.good or colors.bad))
 			        imgui.text('Quest Count: ')
 			        imgui.same_line()
-			        imgui.text_colored(mystery_quests.count, 0xff27f3f5)
+			        imgui.text_colored(mystery_quests.count, colors.info)
 			        imgui.same_line()
 			        imgui.text('/  '..aie.max_quest_count)
 
