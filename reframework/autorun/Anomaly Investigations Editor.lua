@@ -2,7 +2,7 @@ local monsters = json.load_file('Anomaly Investigations Editor/monsters.json')
 
 if not monsters then return end
 
-local version = '1.3.0'
+local version = '1.3.1'
 
 local create_random_mystery_quest = sdk.find_type_definition('snow.quest.nRandomMysteryQuest'):get_method('CreateRandomMysteryQuest')
 local random_mystery_quest_auth = sdk.find_type_definition('snow.quest.nRandomMysteryQuest'):get_method('checkRandomMysteryQuestOrderBan')
@@ -792,7 +792,7 @@ re.on_draw_ui(function()
 			    	imgui.text_colored((authorization.status == 0 and "Pass" or authorization.data[authorization.status]), (authorization.force_pass and colors.good or authorization.status == 0 and colors.good or colors.bad))
 			        imgui.text('Quest Count: ')
 			        imgui.same_line()
-			        imgui.text_colored(mystery_quests.count, colors.info)
+			        imgui.text_colored(mystery_quests.count, mystery_quests.count > 1 and mystery_quests.count < 120 and colors.info or colors.info_warn)
 			        imgui.same_line()
 			        imgui.text('/  '..aie.max_quest_count)
 
