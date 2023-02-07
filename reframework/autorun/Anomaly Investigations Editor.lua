@@ -123,9 +123,9 @@ local rand_rank = {
 		['1-5']=19,
 		['2-6']=1,
 		['3-7']=349,
-		['4-7']=351,
-		['5-7']=350,
-		['6-7']=1303,
+		['4-8']=351,
+		['5-8']=350,
+		['6-8']=1303,
 		['7-8']=2073
 	},
 	array={}
@@ -831,7 +831,7 @@ re.on_draw_ui(function()
 					_,user_input.rand = imgui.combo('Random Quest Rank',user_input.rand,rand_rank.array)
 					_,user_input.amount_to_generate = imgui.slider_int('Amount', user_input.amount_to_generate, 1, aie.max_quest_count - 1)
 
-					if imgui.tree_node('Probabilities at 200 Research Level') then
+					if imgui.tree_node('Probabilities at 220 Research Level') then
 						create_table(table_1)
 						imgui.tree_pop()
 					end
