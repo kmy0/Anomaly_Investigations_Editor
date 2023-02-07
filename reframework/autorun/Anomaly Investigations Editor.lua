@@ -2,7 +2,7 @@ local monsters = json.load_file('Anomaly Investigations Editor/monsters.json')
 
 if not monsters then return end
 
-local version = '1.3.1'
+local version = '1.3.2'
 
 local create_random_mystery_quest = sdk.find_type_definition('snow.quest.nRandomMysteryQuest'):get_method('CreateRandomMysteryQuest')
 local random_mystery_quest_auth = sdk.find_type_definition('snow.quest.nRandomMysteryQuest'):get_method('checkRandomMysteryQuestOrderBan')
@@ -20,7 +20,7 @@ local sub_window = {
 	flags=0x10120,
 	pos=nil,
 	pivot=Vector2f.new(0, 0),
-	size=Vector2f.new(850, 350),
+	size=Vector2f.new(850, 370),
 	condition=1 << 3,
 	is_opened=false
 }
@@ -28,34 +28,35 @@ local table_1 = {
 	name='1',
 	flags=0x12780,
 	row_flags=0x1,
-	col_count=9,
-	row_count=8,
+	col_count=10,
+	row_count=9,
 	data={
-		{'','1    ','1-4','1-5','2-6','3-7','4-7','5-7','6-7'},
-		{'1',100,25,10,0,0,0,0,0},
-		{'2',0,43,25,10,0,0,0,0},
-		{'3',0,27,37,25,15,0,0,0},
-		{'4',0,5,23,37,30,15,0,0},
-		{'5',0,0,5,23,37,32,23,0},
-		{'6',0,0,0,5,15,38,40,37},
-		{'7',0,0,0,0,3,15,37,63},
+		{'','1    ','1-4','1-5','2-6','3-7','4-8','5-8','6-8','7-8'},
+		{'1',100,25,10,0,0,0,0,0,0},
+		{'2',0,43,25,10,0,0,0,0,0},
+		{'3',0,27,37,25,15,0,0,0,0},
+		{'4',0,5,23,37,30,15,0,0,0},
+		{'5',0,0,5,23,37,30,21,0,0},
+		{'6',0,0,0,5,15,37,35,23,0},
+		{'7',0,0,0,0,3,15,33,40,42},
+		{'8',0,0,0,0,0,3,11,37,58},
 	}
 }
 local table_2 = {
 	name='2',
 	flags=0x1278016384,
 	row_flags=0x1,
-	col_count=10,
+	col_count=11,
 	row_count=8,
 	data={
-		{'Quest Level','1-10','11-20','21-30','31-40','41-50','51-60','61-70','71-90','91-200'},
-		{'Main Target Mystery Rank','0','0-1','0-2','0-3','0-3','0-4','0-4','0-5','0-6'},
-		{'Sub Target Mystery Rank','-','-','0-3,11(Apex)','0-5,11(Apex)','0-5,11','0-5,11','0-6,11','0-6,11','0-6,11'},
-		{'Extra Target Mystery Rank','0-1','0-2','0-3','0-5','0-5,11(ED)','0-5,11(ED)','0-6,11(ED)','0-6,11(ED)','0-6,11(ED)'},
-		{'Target Num','1','1','1-2','1-2','1-3','1-3','1-3','1-3','1-3'},
-		{'Quest Life','3-5,9','3-5,9','3-5','3-5','2-5','2-5','2-5','2-5','1-4'},
-		{'Time Limit','50','50','30,35,50','30,35,50','25,30,35,50','25,30,35,50','25,30,35,50','25,30,35,50','25,30,35,50'},
-		{'Hunter Num','4','4','4','4','4','4','4','2,4','2,4'}
+		{'Quest Level','1-10','11-20','21-30','31-40','41-50','51-60','61-70','71-90','91-110','111-220'},
+		{'Main Target Mystery Rank','0','0-1','0-2','0-3','0-3','0-4','0-4','0-5','0-6','0-7'},
+		{'Sub Target Mystery Rank','-','-','0-3,11(Apex)','0-5,11(Apex)','0-5,11','0-5,11','0-6,11','0-6,11','0-7,11','0-7,11'},
+		{'Extra Target Mystery Rank','0-1','0-2','0-3','0-5','0-5,11(ED)','0-5,11(ED)','0-6,11(ED)','0-6,11(ED)','0-7,11(ED)','0-7,11(ED)'},
+		{'Target Num','1','1','1-2','1-2','1-3','1-3','1-3','1-3','1-3','1-3'},
+		{'Quest Life','3-5,9','3-5,9','3-5','3-5','2-5','2-5','2-5','2-5','1-4','1-4'},
+		{'Time Limit','50','50','30,35,50','30,35,50','25,30,35,50','25,30,35,50','25,30,35,50','25,30,35,50','25,30,35,50','25,30,35,50'},
+		{'Hunter Num','4','4','4','4','4','4','4','2,4','2,4','2,4'}
 	}
 }
 local table_3 = {
@@ -124,7 +125,8 @@ local rand_rank = {
 		['3-7']=349,
 		['4-7']=351,
 		['5-7']=350,
-		['6-7']=1303
+		['6-7']=1303,
+		['7-8']=2073
 	},
 	array={}
 }
@@ -211,7 +213,7 @@ local aie = {
 	quest_counter_open=false,
 	target_num_cap=3,
 	max_quest_count=120,
-	max_quest_level=200,
+	max_quest_level=220,
 	max_quest_life=9,
 	max_quest_time_limit=50,
 	max_quest_hunter_num=4,
@@ -303,25 +305,25 @@ local function get_mystery_quest_data_table()
             table.insert(mystery_quests.names,quest.key)
 
             mystery_quests.data[ quest.key ] = {
-            						_QuestNo=quest.no,
-            						sort=quest.data:get_field('_Idx'),
-            						name=quest.key,
-            						index=i,
-                                    _QuestLv=quest.lvl,
-                                    _IsLock=quest.data:get_field('_IsLock'),
-                                    _QuestType=quest.data:get_field('_QuestType'),
-                                    _MapNo=quest.map,
-                                    _BaseTime=quest.data:get_field('_BaseTime'),
-                                    _HuntTargetNum=quest.data:get_field('_HuntTargetNum'),
-                                    monster0=quest.monster0,
-                                    monster1=quest.monster1,
-                                    monster2=quest.monster2,
-                                    monster5=quest.monster5,
-                                    _TimeLimit=quest.data:get_field('_TimeLimit'),
-                                    _QuestLife=quest.data:get_field('_QuestLife'),
-                                    _StartTime=quest.data:get_field('_StartTime'),
-                                    _QuestOrderNum=quest.data:get_field('_QuestOrderNum'),
-                                    data=quest.data
+				_QuestNo=quest.no,
+				sort=quest.data:get_field('_Idx'),
+				name=quest.key,
+				index=i,
+                _QuestLv=quest.lvl,
+                _IsLock=quest.data:get_field('_IsLock'),
+                _QuestType=quest.data:get_field('_QuestType'),
+                _MapNo=quest.map,
+                _BaseTime=quest.data:get_field('_BaseTime'),
+                _HuntTargetNum=quest.data:get_field('_HuntTargetNum'),
+                monster0=quest.monster0,
+                monster1=quest.monster1,
+                monster2=quest.monster2,
+                monster5=quest.monster5,
+                _TimeLimit=quest.data:get_field('_TimeLimit'),
+                _QuestLife=quest.data:get_field('_QuestLife'),
+                _StartTime=quest.data:get_field('_StartTime'),
+                _QuestOrderNum=quest.data:get_field('_QuestOrderNum'),
+                data=quest.data
 			}
 
 			::continue::
@@ -358,7 +360,7 @@ local function generate_random(id)
 	 	return
 	end
 
-	mystery_data:set_field('_QuestLv',201)
+	mystery_data:set_field('_QuestLv',221)
 	mystery_data:get_field('_BossEmType'):call('set_Item',0,id)
 
 	create_random_mystery_quest:call(get_questman(),mystery_data,1,mystery_index,mystery_quest_no,true)
@@ -848,7 +850,6 @@ re.on_draw_ui(function()
 					if imgui.button('Delete Quests') then wipe() end
 
 					if sub_window.is_opened then
-
 						get_sub_window_pos()
 					    imgui.set_next_window_pos(sub_window.pos, sub_window.condition, sub_window.pivot)
 	    				imgui.set_next_window_size(sub_window.size, sub_window.condition)
@@ -862,6 +863,7 @@ re.on_draw_ui(function()
 							imgui.text('Quest cant have duplicate monsters.')
 							imgui.text('Quest cant have two Apex monsters.')
 							imgui.text('Apex monsters cant be intruders.')
+							imgui.text('Risen EDs can appear only as a main target.')
 							imgui.end_window()
 						else
 							if sub_window.is_opened then imgui.end_window() end
