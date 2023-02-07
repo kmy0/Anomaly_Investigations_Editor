@@ -108,6 +108,22 @@
         "mystery_rank": 5,
         "name": "Bazelgeuse"
     },
+    "124": {
+        "capture": false,
+        "main": false,
+        "maps": {
+            "0": true,
+            "1": true,
+            "12": true,
+            "13": true,
+            "2": true,
+            "3": true,
+            "4": true,
+            "5": true
+        },
+        "mystery_rank": 11,
+        "name": "Velkhana"
+    },
     "1303": {
         "capture": true,
         "main": true,
@@ -161,11 +177,14 @@
     },
     "1351": {
         "capture": true,
-        "main": false,
+        "main": true,
         "maps": {
-            "0": true
+            "1": true,
+            "12": true,
+            "13": true,
+            "3": true
         },
-        "mystery_rank": 11,
+        "mystery_rank": 7,
         "name": "Chaotic Gore Magala"
     },
     "136": {
@@ -308,6 +327,42 @@
         },
         "mystery_rank": 2,
         "name": "Shogun Ceanataur"
+    },
+    "2072": {
+        "capture": false,
+        "main": true,
+        "maps": {
+            "12": true,
+            "13": true,
+            "2": true,
+            "4": true
+        },
+        "mystery_rank": 7,
+        "name": "Risen Kushala Daora"
+    },
+    "2073": {
+        "capture": false,
+        "main": true,
+        "maps": {
+            "1": true,
+            "12": true,
+            "13": true,
+            "3": true
+        },
+        "mystery_rank": 7,
+        "name": "Risen Chameleos"
+    },
+    "2075": {
+        "capture": false,
+        "main": true,
+        "maps": {
+            "0": true,
+            "13": true,
+            "2": true,
+            "5": true
+        },
+        "mystery_rank": 7,
+        "name": "Risen Teostra"
     },
     "23": {
         "capture": true,
@@ -729,7 +784,8 @@
         "maps": {
             "0": true,
             "3": true,
-            "4": true
+            "4": true,
+            "5": true
         },
         "mystery_rank": 2,
         "name": "Somnacanth"
