@@ -5,6 +5,7 @@ local config
 local misc
 
 local create_random_mystery_quest = sdk.find_type_definition('snow.quest.nRandomMysteryQuest'):get_method('CreateRandomMysteryQuest')
+local setup_boss_set_cond = sdk.find_type_definition('snow.quest.nRandomMysteryQuest'):get_method('setupBossSetCondition(snow.enemy.EnemyDef.EmTypes[], System.Int32, snow.QuestMapManager.MapNoType)')
 
 
 local function get_free_quest_no()
@@ -26,13 +27,13 @@ local function get_valid_target_num(current, mystery_data)
         1852,
         1874,
         1799,
-        1849,
+        1849
     }
     local valid_target_num_t = {
         [25] = {1},
         [30] = {1, 2},
         [35] = {1, 2},
-        [50] = {1, 2, 3}
+        [50] = {1, 2, 3, 4}
     }
     local valid_target_num = {}
     local valid_target_num_l
@@ -44,11 +45,11 @@ local function get_valid_target_num(current, mystery_data)
     valid_target_num_t = valid_target_num_t[time_limit]
 
     if level > 50 then
-        valid_target_num_l = {1, 2, 3}
+        valid_target_num_l = {1, 2, 3, 4}
     elseif level > 20 then
-        valid_target_num_l = {1, 2}
+        valid_target_num_l = {1, 2, 4}
     else
-        valid_target_num_l = {1}
+        valid_target_num_l = {1, 4}
     end
 
     if misc.table_contains(apexes, em_types:get_Item(1)) then
@@ -121,7 +122,8 @@ local function get_valid_time_limit(current, mystery_data)
     local valid_time_limit_target_num = {
         [1]={25, 30, 35, 50},
         [2]={30, 35, 50},
-        [3]={50}
+        [3]={50},
+        [4]={50}
     }
     local target_num = mystery_data._HuntTargetNum
     local level = mystery_data._QuestLv
@@ -165,37 +167,41 @@ local function get_valid_level(r_max, current, mystery_data)
     local em_types = mystery_data._BossEmType
     local mons = {}
     local min = 1
-    local max = data.aie.max_quest_level
+    local max = r_max
     local target_num = mystery_data._HuntTargetNum
+    local extra_map = data.maps.extra[ data.maps.id_table[ mystery_data._MapNo] ]
+
     local custom_level = {
-        [124]=1,
         [1793]=21,
-        [1794]=21,
+        [1794]=161,
         [1852]=21,
-        [1874]=21
+        [1874]=121,
+        [1849]=241,
+        [1799]=201,
     }
     local valid_time_limit = {
-        [25]={41,data.aie.max_quest_level},
-        [30]={21,data.aie.max_quest_level},
-        [35]={21,data.aie.max_quest_level},
-        [50]={1,data.aie.max_quest_level},
+        [25]={41, data.aie.max_quest_level},
+        [30]={21, data.aie.max_quest_level},
+        [35]={21, data.aie.max_quest_level},
+        [50]={1, data.aie.max_quest_level},
     }
     local valid_target_num = {
-        [3]={41,data.aie.max_quest_level},
-        [2]={21,data.aie.max_quest_level},
-        [1]={1,data.aie.max_quest_level},
+        [4]={1, data.aie.max_quest_level},
+        [3]={41, data.aie.max_quest_level},
+        [2]={21, data.aie.max_quest_level},
+        [1]={1, data.aie.max_quest_level},
     }
     local valid_quest_life = {
-        [9]={1,20},
-        [5]={1,90},
-        [4]={1,data.aie.max_quest_level},
-        [3]={1,data.aie.max_quest_level},
-        [2]={41,data.aie.max_quest_level},
-        [1]={91,data.aie.max_quest_level},
+        [9]={1, 20},
+        [5]={1, 90},
+        [4]={1, data.aie.max_quest_level},
+        [3]={1, data.aie.max_quest_level},
+        [2]={41, data.aie.max_quest_level},
+        [1]={91, data.aie.max_quest_level},
     }
     local valid_hunter_num = {
-        [4]={1,data.aie.max_quest_level},
-        [2]={71,data.aie.max_quest_level}
+        [4]={1, data.aie.max_quest_level},
+        [2]={71, data.aie.max_quest_level}
     }
     local valid_time_limit_target_num = {
         [1]={
@@ -211,6 +217,9 @@ local function get_valid_level(r_max, current, mystery_data)
         },
         [3]={
             [50]=true,
+        },
+        [4]={
+            [50]=true,
         }
     }
 
@@ -219,9 +228,10 @@ local function get_valid_level(r_max, current, mystery_data)
     local v3 = valid_quest_life[mystery_data._QuestLife]
     local v4 = valid_hunter_num[mystery_data._QuestOrderNum]
     local v5 = valid_time_limit_target_num[target_num][mystery_data._TimeLimit]
+    local v6 = not extra_map and {0, data.aie.max_quest_level} or {181, data.aie.max_quest_level}
 
     if v1 and v2 and v3 and v4 and v5 then
-        local vals = {v1, v2, v3, v4}
+        local vals = {v1, v2, v3, v4, v6}
 
         for i, val in pairs(vals) do
             if val[1] > min then
@@ -254,7 +264,7 @@ local function get_valid_level(r_max, current, mystery_data)
         min = mon_min
     end
 
-    if min > r_max or min > max then
+    if min > max then
         return current
     elseif current < min then
         return min
@@ -265,7 +275,7 @@ local function get_valid_level(r_max, current, mystery_data)
     end
 end
 
-local function edit_single(mystery)
+local function edit_single(mystery, is_special_open)
     if (
         config.user_input.target_num == 2
         and data.monsters.table[config.user_input.monster1.id].capture
@@ -275,7 +285,14 @@ local function edit_single(mystery)
                  data.monsters.table[config.user_input.monster1.id].capture
                  or data.monsters.table[config.user_input.monster2.id].capture
             )
-        )
+        ) or (
+            config.user_input.target_num == 4
+            and (
+                 data.monsters.table[config.user_input.monster1.id].capture
+                 or data.monsters.table[config.user_input.monster2.id].capture
+                 or data.monsters.table[config.user_input.monster3.id].capture
+            )
+          )
     ) then
         mystery.quest_type = 1
     end
@@ -284,18 +301,10 @@ local function edit_single(mystery)
     mystery.em_types:set_Item(0, tonumber(config.user_input.monster0.id))
     mystery.em_types:set_Item(1, tonumber(config.user_input.monster1.id))
     mystery.em_types:set_Item(2, tonumber(config.user_input.monster2.id))
+    mystery.em_types:set_Item(3, tonumber(config.user_input.monster3.id))
     mystery.em_types:set_Item(5, tonumber(config.user_input.monster5.id))
 
-    if config.user_input.monster1.id == 0 then mystery.mon_conditions.mon1_cond = 0 end
-    if config.user_input.monster2.id == 0 then mystery.mon_conditions.mon2_cond = 0 end
-    if config.user_input.monster5.id == 0 then mystery.mon_conditions.mon5_cond = 0 end
-
-    mystery.em_cond = mystery.data._BossSetCondition
-    mystery.em_cond:set_Item(0, mystery.mon_conditions.mon0_cond)
-    mystery.em_cond:set_Item(1, mystery.mon_conditions.mon1_cond)
-    mystery.em_cond:set_Item(2, mystery.mon_conditions.mon2_cond)
-    mystery.em_cond:set_Item(5, mystery.mon_conditions.mon5_cond)
-
+    mystery.data._BossSetCondition = setup_boss_set_cond(data.get_questman(), mystery.em_types, config.user_input.target_num, data.maps.table[ data.maps.array[ config.user_input.map ] ])
     mystery.swap_cond = mystery.data._SwapSetCondition
     mystery.swap_param = mystery.data._SwapSetParam
 
@@ -330,22 +339,28 @@ local function edit_single(mystery)
     mystery.seed._StartTime = data.tod.table[ data.tod.array[ config.user_input.tod ] ]
     mystery.data._QuestLv = config.user_input.quest_lvl
     mystery.seed._QuestLv = config.user_input.quest_lvl
+
+
+    mystery.data._isSpecialQuestOpen = config.user_input.quest_lvl == data.aie.max_quest_level and is_special_open and config.user_input.special_open == 2
+    mystery.seed._isSpecialQuestOpen = mystery.data._isSpecialQuestOpen
+    mystery.data._IsSpecialNewFlag = mystery.data._isSpecialQuestOpen
 end
 
-local function edit_mass(mystery, keep_valid, max_level)
+local function edit_mass(mystery, keep_valid, max_level, is_special_open)
+    local level = mystery.data._QuestLv
+
     if config.user_input.edit_target_num then
         local target_num = config.user_input.target_num
-        if data.maps.invalid[ data.maps.id_table[mystery.data._MapNo] ] then
-            target_num = 1
-        elseif keep_valid then
+
+        if keep_valid then
             target_num = get_valid_target_num(target_num, mystery.data)
         end
 
-        mystery.mon_conditions = misc.table_deep_copy(data.default_mon_conditions[target_num])
         mystery.em_types = mystery.data._BossEmType
 
         local mon1 = tostring(mystery.em_types:get_Item(1))
         local mon2 = tostring(mystery.em_types:get_Item(2))
+        local mon3 = tostring(mystery.em_types:get_Item(3))
 
         if (
             target_num == 2
@@ -356,13 +371,19 @@ local function edit_mass(mystery, keep_valid, max_level)
                      data.monsters.table[mon1].capture
                      or data.monsters.table[mon2].capture
                 )
-            )
+            ) or (
+                target_num == 4
+                and (
+                     data.monsters.table[mon1].capture
+                     or data.monsters.table[mon2].capture
+                     or data.monsters.table[mon3].capture
+                )
+              )
         ) then
             mystery.quest_type = 1
         end
 
-        if target_num == 3 then
-            mystery.mon_conditions.mon5_cond = 0
+        if target_num > 2 then
             mystery.swap_cond = mystery.data._SwapSetCondition
             mystery.swap_param = mystery.data._SwapSetParam
             mystery.em_types:set_Item(5, 0)
@@ -372,12 +393,21 @@ local function edit_mass(mystery, keep_valid, max_level)
             mystery.data._SwapExecType = 0
         end
 
-        mystery.em_cond = mystery.data._BossSetCondition
-        mystery.em_cond:set_Item(0, mystery.mon_conditions.mon0_cond)
-        mystery.em_cond:set_Item(1, mystery.mon_conditions.mon1_cond)
-        mystery.em_cond:set_Item(2, mystery.mon_conditions.mon2_cond)
-        mystery.em_cond:set_Item(5, mystery.mon_conditions.mon5_cond)
+        if target_num < 4 then
+            mystery.em_types:set_Item(3, 0)
+        end
 
+        if data.maps.extra[ data.maps.id_table[mystery.data._MapNo] ] then
+            if target_num < 3 then
+                mystery.em_types:set_Item(2, 0)
+            end
+
+            if target_num < 2 then
+                mystery.em_types:set_Item(1, 0)
+            end
+        end
+
+        mystery.data._BossSetCondition = setup_boss_set_cond(data.get_questman(), mystery.em_types, target_num, mystery.data._MapNo)
         mystery.data._HuntTargetNum = target_num
         mystery.seed._HuntTargetNum = target_num
         mystery.data._QuestType = mystery.quest_type
@@ -417,13 +447,17 @@ local function edit_mass(mystery, keep_valid, max_level)
     end
 
     if config.user_input.edit_quest_lvl then
-        local level = config.user_input.quest_lvl
+        level = config.user_input.quest_lvl
         if keep_valid then
             level = get_valid_level(max_level, level, mystery.data)
         end
         mystery.data._QuestLv = level
         mystery.seed._QuestLv = level
     end
+
+    mystery.data._isSpecialQuestOpen = level == data.aie.max_quest_level and is_special_open and config.user_input.special_open == 2
+    mystery.seed._isSpecialQuestOpen = mystery.data._isSpecialQuestOpen
+    mystery.data._IsSpecialNewFlag = mystery.data._isSpecialQuestOpen
 end
 
 function editor.edit_quest()
@@ -445,6 +479,7 @@ function editor.edit_quest()
     local mystery_seeds = quest_save_data._RandomMysteryQuestSeed
     local max_level = data.get_progman():get_MysteryResearchLevel()
     local keep_valid = config.mass_edit_option_count() == 1 and config.user_input.keep_valid
+    local is_special_open = data.get_questman():isOpenSpecialRandomMysteryQuest()
 
     for _, mystery_data in pairs(mystery_data_array) do
         if not mystery_data then
@@ -454,8 +489,7 @@ function editor.edit_quest()
 
         local mystery = {
             data=mystery_data,
-            quest_type=2,
-            mon_conditions=misc.table_deep_copy(data.default_mon_conditions[config.user_input.target_num])
+            quest_type=2
         }
 
         mystery.seed = data.get_questman():getRandomQuestSeedFromQuestNo(mystery.data._QuestNo)
@@ -464,9 +498,9 @@ function editor.edit_quest()
         if not mystery.seed or not mystery.seed_index then return end
 
         if config.user_input.mode == 1 then
-            edit_single(mystery)
+            edit_single(mystery, is_special_open)
         else
-            edit_mass(mystery, keep_valid, max_level)
+            edit_mass(mystery, keep_valid, max_level, is_special_open)
         end
 
         mystery.data._IsNewFlag = true

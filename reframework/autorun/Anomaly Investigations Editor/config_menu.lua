@@ -4,6 +4,7 @@ local config
 local data
 local editor
 local filter
+local misc
 
 config_menu.is_opened = false
 
@@ -34,15 +35,15 @@ local mass_window = {
 local table_probabilities = {
     name='1',
     flags=table_flags,
-    col_count=10,
-    row_count=9,
+    col_count=11,
+    row_count=10,
     data={}
 }
 local table_valid_combination = {
     name='2',
     flags=table_flags,
     col_count=7,
-    row_count=11,
+    row_count=12,
     data={}
 }
 local table_valid_time_limit = {
@@ -63,7 +64,7 @@ local table_normal_rank_11_rules = {
     name='3',
     flags=table_flags,
     col_count=2,
-    row_count=6,
+    row_count=8,
     data={}
 }
 local colors = {
@@ -76,7 +77,7 @@ local changed = {
     filter=true,
     map=false,
     quest=false,
-    target_num=false
+    -- target_num=false
 }
 
 
@@ -214,6 +215,7 @@ function mass_window.draw()
             imgui.indent(10)
 
             _, config.user_input.edit_quest_lvl = imgui.checkbox('Edit Level', config.user_input.edit_quest_lvl)
+            _, config.user_input.edit_special_open = imgui.checkbox('Edit Special Open', config.user_input.edit_special_open)
             _, config.user_input.edit_target_num = imgui.checkbox('Edit Target Num', config.user_input.edit_target_num)
             _, config.user_input.edit_quest_life = imgui.checkbox('Edit Quest Life', config.user_input.edit_quest_life)
             _, config.user_input.edit_time_limit = imgui.checkbox('Edit Time Limit', config.user_input.edit_time_limit)
@@ -274,12 +276,14 @@ function mass_window.draw()
                     local str =
                         'Monster2: ' .. data.monsters.table[tostring(item.monster1)].name ..
                         '\nMonster3: ' .. data.monsters.table[tostring(item.monster2)].name ..
+                        '\nMonster4: ' .. data.monsters.table[tostring(item.monster3)].name ..
                         '\nIntruder: ' .. data.monsters.table[tostring(item.monster5)].name ..
                         '\nTarget Num: ' .. item._HuntTargetNum ..
                         '\nTime Limit: ' .. item._TimeLimit ..
                         '\nQuest Life: ' .. item._QuestLife ..
                         '\nTime of Day: ' .. data.tod.array[item._StartTime + 1] ..
-                        '\nHunter Num: ' .. item._QuestOrderNum
+                        '\nHunter Num: ' .. item._QuestOrderNum ..
+                        '\nSpecial Open: ' .. (item._isSpecialQuestOpen and "Yes" or "No")
                     set_tooltip(str, true)
 
                     if item.auth ~= 0 then
@@ -324,6 +328,7 @@ function sub_window.draw()
         imgui.text('Main target follows MYSTERY rank')
         imgui.text('Sub target follows NORMAL rank')
         imgui.text('Authorization doesnt check Extra targets and Intruders at all')
+        imgui.text('4 Target Num works from level 1')
         create_table(table_valid_combination)
         imgui.new_line()
         create_table(table_valid_time_limit)
@@ -331,7 +336,7 @@ function sub_window.draw()
         imgui.text('Normal Rank 11 Rules')
         create_table(table_normal_rank_11_rules)
         imgui.new_line()
-        imgui.text("Invalid maps: Infernal Springs, Arena, Forlorn Arena")
+        imgui.text("Extra maps available from level 181(Not for all monsters): Infernal Springs, Arena, Forlorn Arena")
         imgui.text('Quest cant have duplicate monsters.')
         imgui.text('Quest cant have two Apex monsters.')
         imgui.text('Apex monsters cant be intruders or extra targets.')
@@ -413,7 +418,6 @@ function config_menu.draw()
                     imgui.text('Quests Selected: ')
                     imgui.same_line()
                     config.user_input.selection_count = 0
-                    data.aie.target_num_cap = 3
                     data.quest_pick.quest = nil
 
                     for _, v in pairs(config.user_input.selection) do
@@ -430,27 +434,26 @@ function config_menu.draw()
                 if data.quest_pick.quest then
                     if changed.map then
                         data.get_arrays()
-                        if data.maps.invalid[ data.maps.array[config.user_input.map] ] then
-                            data.aie.target_num_cap = 1
-                            config.user_input.target_num = 1
-                        else
-                            data.aie.target_num_cap = 3
-                        end
-                        changed.target_num = true
                     end
 
-                    if changed.target_num then
-                        if data.maps.invalid[ data.maps.array[config.user_input.map] ] then
-                            data.monster_arrays.extra.current = {'None - 0 - 0'}
-                            data.monster_arrays.intruder.current = {'None - 0 - 0'}
-                        else
-                            if config.user_input.target_num < 3 then
-                                data.monster_arrays.intruder.current = data.monster_arrays.intruder.map_valid
-                                config.user_input.monster5.pick = data.get_monster_pick(data.monster_arrays.intruder.current, data.quest_pick.quest.monster5)
-                            else
-                                data.monster_arrays.intruder.current = {'None - 0 - 0'}
-                            end
+                    if config.user_input.target_num < 4 then
+                        config.user_input.monster3.pick = misc.index_of(data.monster_arrays.extra.current, 'None - 0 - 0')
+                    end
+
+                    if config.user_input.target_num > 2 then
+                        config.user_input.monster5.pick = misc.index_of(data.monster_arrays.extra.current, 'None - 0 - 0')
+                    end
+
+                    if data.maps.extra[ data.maps.array[config.user_input.map] ] then
+                        if config.user_input.target_num < 3 then
+                            config.user_input.monster2.pick = misc.index_of(data.monster_arrays.extra.current, 'None - 0 - 0')
                         end
+
+                        if config.user_input.target_num < 2 then
+                            config.user_input.monster1.pick = misc.index_of(data.monster_arrays.extra.current, 'None - 0 - 0')
+                        end
+
+                        config.user_input.monster5.pick = misc.index_of(data.monster_arrays.extra.current, 'None - 0 - 0')
                     end
 
                     if config.user_input.mode == 1 then
@@ -475,6 +478,10 @@ function config_menu.draw()
                         imgui.text('Monster 3: ')
                         imgui.same_line()
                         imgui.text_colored(data.monsters.table[ tostring(data.quest_pick.quest.monster2) ].name, colors.info)
+
+                        imgui.text('Monster 4: ')
+                        imgui.same_line()
+                        imgui.text_colored(data.monsters.table[ tostring(data.quest_pick.quest.monster3) ].name, colors.info)
 
                         imgui.text('Intruder: ')
                         imgui.same_line()
@@ -504,6 +511,10 @@ function config_menu.draw()
                         imgui.same_line()
                         imgui.text_colored(data.quest_pick.quest._IsLock and 'Yes - Editing Disabled' or 'No', data.quest_pick.quest._IsLock and colors.info_warn or colors.info)
 
+                        imgui.text('Special Open: ')
+                        imgui.same_line()
+                        imgui.text_colored(data.quest_pick.quest._isSpecialQuestOpen and "Yes" or "No", colors.info)
+
                         imgui.text('Auth Status: ')
                         imgui.same_line()
                         imgui.text_colored((data.quest_pick.quest.auth == 0 and "Pass" or data.authorization.table[data.quest_pick.quest.auth]), (config.user_input.force_pass and colors.good or data.quest_pick.quest.auth == 0 and colors.good or colors.bad))
@@ -520,8 +531,13 @@ function config_menu.draw()
                         imgui.text('Name - Mystery Rank - Normal Rank')
                         _, config.user_input.monster0.pick = imgui.combo('Monster 1', config.user_input.monster0.pick, data.monster_arrays.main.current)
                         _, config.user_input.monster1.pick = imgui.combo('Monster 2', config.user_input.monster1.pick, data.monster_arrays.extra.current)
+                        set_tooltip('Always None below 2 Target Num on Extra Maps', true)
                         _, config.user_input.monster2.pick = imgui.combo('Monster 3', config.user_input.monster2.pick, data.monster_arrays.extra.current)
-                        _, config.user_input.monster5.pick = imgui.combo('Intruder', config.user_input.monster5.pick, data.monster_arrays.intruder.current)
+                        set_tooltip('Always None below 3 Target Num on Extra Maps', true)
+                        _, config.user_input.monster3.pick = imgui.combo('Monster 4', config.user_input.monster3.pick, data.monster_arrays.extra.current)
+                        set_tooltip('Always None below 4 Target Num', true)
+                        _, config.user_input.monster5.pick = imgui.combo('Intruder', config.user_input.monster5.pick, data.monster_arrays.extra.current)
+                        set_tooltip('Always None above 2 Target Num', true)
                     end
 
                     if config.user_input.mode == 1 then
@@ -532,12 +548,17 @@ function config_menu.draw()
                         _, config.user_input.tod = imgui.combo('Time of Day', config.user_input.tod, data.tod.array)
                     end
 
+                    if config.user_input.mode == 1 or config.user_input.mode == 2 and config.user_input.edit_special_open then
+                        _, config.user_input.special_open = imgui.combo('Special Open', config.user_input.special_open, {"No", "Yes"})
+                        set_tooltip('You can open Special Quest only if Quest Level is at 300 and you already unlocked them', true)
+                    end
+
                     if config.user_input.mode == 1 or config.user_input.mode == 2 and config.user_input.edit_quest_lvl then
                         _, config.user_input.quest_lvl = imgui.slider_int('Quest Level', config.user_input.quest_lvl, 1, data.aie.max_quest_level)
                     end
 
                     if config.user_input.mode == 1 or config.user_input.mode == 2 and config.user_input.edit_target_num then
-                        changed.target_num, config.user_input.target_num = imgui.slider_int('Target Num', config.user_input.target_num, 1, data.aie.target_num_cap)
+                        _, config.user_input.target_num = imgui.slider_int('Target Num', config.user_input.target_num, 1, data.aie.target_num_cap)
                     end
 
                     if config.user_input.mode == 1 or config.user_input.mode == 2 and config.user_input.edit_quest_life then
@@ -555,7 +576,8 @@ function config_menu.draw()
                     config.user_input.monster0.id = data.monsters.id_table[ data.monster_arrays.main.current[ config.user_input.monster0.pick ] ]
                     config.user_input.monster1.id = data.monsters.id_table[ data.monster_arrays.extra.current[ config.user_input.monster1.pick ] ]
                     config.user_input.monster2.id = data.monsters.id_table[ data.monster_arrays.extra.current[ config.user_input.monster2.pick ] ]
-                    config.user_input.monster5.id = data.monsters.id_table[ data.monster_arrays.intruder.current[ config.user_input.monster5.pick ] ]
+                    config.user_input.monster3.id = data.monsters.id_table[ data.monster_arrays.extra.current[ config.user_input.monster3.pick ] ]
+                    config.user_input.monster5.id = data.monsters.id_table[ data.monster_arrays.extra.current[ config.user_input.monster5.pick ] ]
                 end
 
                 if sub_window.is_opened then
@@ -575,6 +597,7 @@ function config_menu.draw()
                             config.user_input.mode == 2
                             and (
                                  config.user_input.edit_tod
+                                 or config.user_input.edit_special_open
                                  or config.user_input.edit_quest_lvl
                                  or config.user_input.edit_target_num
                                  or config.user_input.edit_quest_life
@@ -663,6 +686,7 @@ function config_menu.init()
     config = require('Anomaly Investigations Editor/config')
     editor = require('Anomaly Investigations Editor/editor')
     filter = require('Anomaly Investigations Editor/filter')
+    misc = require('Anomaly Investigations Editor/misc')
 
     table_valid_combination.data = data.valid_combinations
     table_probabilities.data = data.probabilties

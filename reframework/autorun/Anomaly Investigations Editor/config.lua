@@ -30,8 +30,12 @@ config.user_input = {
         pick=3,
         id=nil
     },
+    monster3={
+        pick=4,
+        id=nil
+    },
     monster5={
-        pick=1,
+        pick=5,
         id=nil
     },
     edit_quest_lvl=false,
@@ -57,20 +61,13 @@ function config.reset_input()
     config.user_input.quest_life = data.quest_pick.quest._QuestLife
     config.user_input.time_limit = data.quest_pick.quest._TimeLimit
     config.user_input.hunter_num = data.quest_pick.quest._QuestOrderNum
-    data.aie.target_num_cap = 3
-
-    if data.maps.invalid[ data.maps.id_table[ data.quest_pick.quest._MapNo ] ] then
-        data.monster_arrays.extra.current = {'None - 0'}
-        data.monster_arrays.intruder.current = {'None - 0'}
-        data.aie.target_num_cap = 1
-    elseif config.user_input.target_num == 3 then
-        data.monster_arrays.intruder.current = {'None - 0'}
-    end
+    config.user_input.special_open = data.quest_pick.quest._isSpecialQuestOpen and 2 or 1
 
     config.user_input.monster0.pick = data.get_monster_pick(data.monster_arrays.main.current, data.quest_pick.quest.monster0)
     config.user_input.monster1.pick = data.get_monster_pick(data.monster_arrays.extra.current, data.quest_pick.quest.monster1)
     config.user_input.monster2.pick = data.get_monster_pick(data.monster_arrays.extra.current, data.quest_pick.quest.monster2)
-    config.user_input.monster5.pick = data.get_monster_pick(data.monster_arrays.intruder.current, data.quest_pick.quest.monster5)
+    config.user_input.monster3.pick = data.get_monster_pick(data.monster_arrays.extra.current, data.quest_pick.quest.monster3)
+    config.user_input.monster5.pick = data.get_monster_pick(data.monster_arrays.extra.current, data.quest_pick.quest.monster5)
 
     data.aie.reload = false
 end

@@ -20,12 +20,14 @@
         "capture": true,
         "main": true,
         "maps": {
-            "0": true,
             "1": true,
+            "10": true,
             "12": true,
+            "14": true,
             "2": true,
             "3": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 2,
         "name": "Rathian",
@@ -37,11 +39,14 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "13": true,
+            "14": true,
             "2": true,
             "3": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 2,
         "name": "Anjanath",
@@ -53,8 +58,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
+            "14": true,
             "2": true,
-            "3": true
+            "3": true,
+            "9": true
         },
         "mystery_rank": 2,
         "name": "Pukei-Pukei",
@@ -64,12 +72,14 @@
         "capture": true,
         "main": true,
         "maps": {
-            "0": true,
             "1": true,
+            "10": true,
             "12": true,
+            "14": true,
             "2": true,
             "3": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 0,
         "name": "Kulu-Ya-Ku",
@@ -80,7 +90,8 @@
         "main": true,
         "maps": {
             "0": true,
-            "3": true
+            "3": true,
+            "9": true
         },
         "mystery_rank": 2,
         "name": "Jyuratodus",
@@ -92,8 +103,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "12": true,
-            "3": true
+            "14": true,
+            "3": true,
+            "9": true
         },
         "mystery_rank": 2,
         "name": "Tobi-Kadachi",
@@ -105,12 +119,15 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "13": true,
+            "14": true,
             "2": true,
             "3": true,
             "4": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 5,
         "name": "Bazelgeuse",
@@ -122,16 +139,19 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "13": true,
+            "14": true,
             "2": true,
             "3": true,
             "4": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 11,
         "name": "Velkhana",
-        "normal_rank": 11
+        "normal_rank": 5
     },
     "1303": {
         "capture": true,
@@ -139,12 +159,15 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "13": true,
+            "14": true,
             "2": true,
             "3": true,
             "4": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 6,
         "name": "Furious Rajang",
@@ -156,8 +179,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "13": true,
-            "5": true
+            "14": true,
+            "5": true,
+            "9": true
         },
         "mystery_rank": 11,
         "name": "Malzeno",
@@ -167,10 +193,14 @@
         "capture": true,
         "main": true,
         "maps": {
+            "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "13": true,
-            "4": true
+            "14": true,
+            "4": true,
+            "9": true
         },
         "mystery_rank": 4,
         "name": "Lunagaron",
@@ -181,8 +211,11 @@
         "main": true,
         "maps": {
             "0": true,
+            "10": true,
             "13": true,
-            "3": true
+            "14": true,
+            "3": true,
+            "9": true
         },
         "mystery_rank": 3,
         "name": "Garangolm",
@@ -192,10 +225,14 @@
         "capture": true,
         "main": true,
         "maps": {
+            "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "13": true,
-            "3": true
+            "14": true,
+            "3": true,
+            "9": true
         },
         "mystery_rank": 7,
         "name": "Chaotic Gore Magala",
@@ -207,8 +244,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "12": true,
-            "13": true
+            "13": true,
+            "14": true,
+            "9": true
         },
         "mystery_rank": 5,
         "name": "Espinas",
@@ -220,12 +260,15 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "13": true,
+            "14": true,
             "2": true,
             "3": true,
             "4": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 11,
         "name": "Crimson Glow Valstrax",
@@ -235,10 +278,14 @@
         "capture": true,
         "main": true,
         "maps": {
+            "0": true,
             "1": true,
+            "10": true,
             "13": true,
+            "14": true,
             "3": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 6,
         "name": "Scorned Magnamalo",
@@ -250,12 +297,15 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "13": true,
+            "14": true,
             "2": true,
             "3": true,
             "4": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 6,
         "name": "Seething Bazelgeuse",
@@ -265,12 +315,14 @@
         "capture": false,
         "main": false,
         "maps": {
-            "0": true,
             "1": true,
+            "10": true,
             "12": true,
+            "14": true,
             "2": true,
             "3": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 11,
         "name": "Apex Rathian",
@@ -282,11 +334,44 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "13": true,
-            "5": true
+            "14": true,
+            "5": true,
+            "9": true
         },
         "mystery_rank": 11,
         "name": "Apex Rathalos",
+        "normal_rank": 11
+    },
+    "1799": {
+        "capture": false,
+        "main": false,
+        "maps": {
+            "10": true,
+            "14": true,
+            "2": true,
+            "9": true
+        },
+        "mystery_rank": 11,
+        "name": "Apex Diablos",
+        "normal_rank": 11
+    },
+    "1849": {
+        "capture": false,
+        "main": false,
+        "maps": {
+            "0": true,
+            "1": true,
+            "10": true,
+            "12": true,
+            "13": true,
+            "14": true,
+            "3": true,
+            "9": true
+        },
+        "mystery_rank": 11,
+        "name": "Apex Zinogre",
         "normal_rank": 11
     },
     "1852": {
@@ -295,8 +380,10 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "13": true,
-            "3": true
+            "3": true,
+            "9": true
         },
         "mystery_rank": 11,
         "name": "Apex Arzuros",
@@ -306,10 +393,14 @@
         "capture": false,
         "main": false,
         "maps": {
+            "0": true,
             "1": true,
+            "10": true,
             "12": true,
+            "14": true,
             "3": true,
-            "4": true
+            "4": true,
+            "9": true
         },
         "mystery_rank": 11,
         "name": "Apex Mizutsune",
@@ -319,10 +410,14 @@
         "capture": true,
         "main": true,
         "maps": {
+            "0": true,
             "1": true,
+            "10": true,
             "12": true,
+            "14": true,
             "2": true,
-            "3": true
+            "3": true,
+            "9": true
         },
         "mystery_rank": 1,
         "name": "Daimyo Hermitaur",
@@ -334,8 +429,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "13": true,
-            "5": true
+            "14": true,
+            "5": true,
+            "9": true
         },
         "mystery_rank": 4,
         "name": "Rathalos",
@@ -346,8 +444,11 @@
         "main": true,
         "maps": {
             "0": true,
+            "10": true,
+            "14": true,
             "3": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 2,
         "name": "Shogun Ceanataur",
@@ -357,10 +458,14 @@
         "capture": false,
         "main": true,
         "maps": {
+            "0": true,
+            "10": true,
             "12": true,
             "13": true,
+            "14": true,
             "2": true,
-            "4": true
+            "4": true,
+            "9": true
         },
         "mystery_rank": 7,
         "name": "Risen Kushala Daora",
@@ -370,10 +475,14 @@
         "capture": false,
         "main": true,
         "maps": {
+            "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "13": true,
-            "3": true
+            "14": true,
+            "3": true,
+            "9": true
         },
         "mystery_rank": 7,
         "name": "Risen Chameleos",
@@ -384,12 +493,48 @@
         "main": true,
         "maps": {
             "0": true,
+            "10": true,
             "13": true,
+            "14": true,
             "2": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 7,
         "name": "Risen Teostra",
+        "normal_rank": 11
+    },
+    "2120": {
+        "capture": false,
+        "main": true,
+        "maps": {
+            "10": true,
+            "13": true,
+            "14": true,
+            "9": true
+        },
+        "mystery_rank": 8,
+        "name": "Risen Shagaru Magala",
+        "normal_rank": 11
+    },
+    "2134": {
+        "capture": false,
+        "main": true,
+        "maps": {
+            "0": true,
+            "1": true,
+            "10": true,
+            "12": true,
+            "13": true,
+            "14": true,
+            "2": true,
+            "3": true,
+            "4": true,
+            "5": true,
+            "9": true
+        },
+        "mystery_rank": 8,
+        "name": "Risen Crimson Glow Valstrax",
         "normal_rank": 11
     },
     "23": {
@@ -398,12 +543,15 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "13": true,
+            "14": true,
             "2": true,
             "3": true,
             "4": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 5,
         "name": "Rajang",
@@ -413,10 +561,14 @@
         "capture": false,
         "main": false,
         "maps": {
+            "0": true,
+            "10": true,
             "12": true,
             "13": true,
+            "14": true,
             "2": true,
-            "4": true
+            "4": true,
+            "9": true
         },
         "mystery_rank": 11,
         "name": "Kushala Daora",
@@ -426,10 +578,13 @@
         "capture": false,
         "main": false,
         "maps": {
+            "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "13": true,
-            "3": true
+            "3": true,
+            "9": true
         },
         "mystery_rank": 11,
         "name": "Chameleos",
@@ -440,9 +595,12 @@
         "main": false,
         "maps": {
             "0": true,
+            "10": true,
             "13": true,
+            "14": true,
             "2": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 11,
         "name": "Teostra",
@@ -453,8 +611,11 @@
         "main": true,
         "maps": {
             "0": true,
+            "10": true,
+            "14": true,
             "4": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 1,
         "name": "Khezu",
@@ -464,10 +625,14 @@
         "capture": true,
         "main": true,
         "maps": {
+            "0": true,
+            "10": true,
             "13": true,
+            "14": true,
             "2": true,
             "4": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 4,
         "name": "Tigrex",
@@ -479,8 +644,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "13": true,
-            "2": true
+            "14": true,
+            "2": true,
+            "9": true
         },
         "mystery_rank": 2,
         "name": "Blood Orange Bishaten",
@@ -490,9 +658,10 @@
         "capture": true,
         "main": true,
         "maps": {
-            "0": true,
+            "10": true,
             "13": true,
-            "4": true
+            "4": true,
+            "9": true
         },
         "mystery_rank": 3,
         "name": "Aurora Somnacanth",
@@ -503,8 +672,11 @@
         "main": true,
         "maps": {
             "0": true,
+            "10": true,
             "13": true,
-            "5": true
+            "14": true,
+            "5": true,
+            "9": true
         },
         "mystery_rank": 5,
         "name": "Pyre Rakna-Kadaki",
@@ -514,8 +686,10 @@
         "capture": true,
         "main": true,
         "maps": {
-            "0": true,
-            "5": true
+            "10": true,
+            "14": true,
+            "5": true,
+            "9": true
         },
         "mystery_rank": 4,
         "name": "Magma Almudron",
@@ -527,8 +701,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "12": true,
-            "3": true
+            "14": true,
+            "3": true,
+            "9": true
         },
         "mystery_rank": 3,
         "name": "Nargacuga",
@@ -538,8 +715,10 @@
         "capture": true,
         "main": true,
         "maps": {
-            "0": true,
-            "13": true
+            "10": true,
+            "13": true,
+            "14": true,
+            "9": true
         },
         "mystery_rank": 6,
         "name": "Flaming Espinas",
@@ -550,8 +729,11 @@
         "main": true,
         "maps": {
             "0": true,
+            "10": true,
+            "14": true,
             "2": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 1,
         "name": "Basarios",
@@ -562,8 +744,11 @@
         "main": true,
         "maps": {
             "0": true,
+            "10": true,
             "13": true,
-            "4": true
+            "14": true,
+            "4": true,
+            "9": true
         },
         "mystery_rank": 3,
         "name": "Barioth",
@@ -574,7 +759,9 @@
         "main": true,
         "maps": {
             "0": true,
-            "2": true
+            "10": true,
+            "2": true,
+            "9": true
         },
         "mystery_rank": 1,
         "name": "Barroth",
@@ -585,9 +772,11 @@
         "main": true,
         "maps": {
             "0": true,
+            "10": true,
             "12": true,
             "3": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 1,
         "name": "Royal Ludroth",
@@ -597,12 +786,14 @@
         "capture": true,
         "main": true,
         "maps": {
-            "0": true,
             "1": true,
+            "10": true,
             "12": true,
+            "14": true,
             "2": true,
             "3": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 6,
         "name": "Gold Rathian",
@@ -614,8 +805,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "13": true,
-            "5": true
+            "14": true,
+            "5": true,
+            "9": true
         },
         "mystery_rank": 6,
         "name": "Silver Rathalos",
@@ -625,8 +819,10 @@
         "capture": true,
         "main": true,
         "maps": {
-            "0": true,
-            "4": true
+            "10": true,
+            "14": true,
+            "4": true,
+            "9": true
         },
         "mystery_rank": 0,
         "name": "Great Baggi",
@@ -636,7 +832,8 @@
         "capture": true,
         "main": false,
         "maps": {
-            "0": true
+            "0": true,
+            "14": true
         },
         "mystery_rank": 11,
         "name": "Lucent Nargacuga",
@@ -646,10 +843,14 @@
         "capture": true,
         "main": true,
         "maps": {
+            "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "13": true,
-            "3": true
+            "14": true,
+            "3": true,
+            "9": true
         },
         "mystery_rank": 4,
         "name": "Zinogre",
@@ -659,10 +860,14 @@
         "capture": true,
         "main": true,
         "maps": {
+            "0": true,
             "1": true,
+            "10": true,
             "12": true,
+            "14": true,
             "3": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 0,
         "name": "Great Wroggi",
@@ -672,7 +877,10 @@
         "capture": true,
         "main": false,
         "maps": {
-            "0": true
+            "0": true,
+            "10": true,
+            "14": true,
+            "9": true
         },
         "mystery_rank": 11,
         "name": "Violet Mizutsune",
@@ -684,8 +892,10 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "13": true,
-            "3": true
+            "3": true,
+            "9": true
         },
         "mystery_rank": 0,
         "name": "Arzuros",
@@ -695,9 +905,10 @@
         "capture": true,
         "main": true,
         "maps": {
-            "0": true,
+            "10": true,
             "13": true,
-            "4": true
+            "4": true,
+            "9": true
         },
         "mystery_rank": 0,
         "name": "Lagombi",
@@ -708,9 +919,11 @@
         "main": true,
         "maps": {
             "0": true,
+            "10": true,
             "13": true,
             "2": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 0,
         "name": "Volvidon",
@@ -720,8 +933,10 @@
         "capture": true,
         "main": true,
         "maps": {
-            "0": true,
-            "2": true
+            "10": true,
+            "14": true,
+            "2": true,
+            "9": true
         },
         "mystery_rank": 4,
         "name": "Diablos",
@@ -731,10 +946,14 @@
         "capture": true,
         "main": true,
         "maps": {
+            "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "13": true,
-            "3": true
+            "14": true,
+            "3": true,
+            "9": true
         },
         "mystery_rank": 5,
         "name": "Gore Magala",
@@ -744,8 +963,10 @@
         "capture": false,
         "main": false,
         "maps": {
-            "0": true,
-            "13": true
+            "10": true,
+            "13": true,
+            "14": true,
+            "9": true
         },
         "mystery_rank": 11,
         "name": "Shagaru Magala",
@@ -757,8 +978,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "13": true,
-            "2": true
+            "14": true,
+            "2": true,
+            "9": true
         },
         "mystery_rank": 4,
         "name": "Seregios",
@@ -770,8 +994,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "12": true,
-            "3": true
+            "14": true,
+            "3": true,
+            "9": true
         },
         "mystery_rank": 4,
         "name": "Astalos",
@@ -781,10 +1008,14 @@
         "capture": true,
         "main": true,
         "maps": {
+            "0": true,
             "1": true,
+            "10": true,
             "12": true,
+            "14": true,
             "3": true,
-            "4": true
+            "4": true,
+            "9": true
         },
         "mystery_rank": 4,
         "name": "Mizutsune",
@@ -796,8 +1027,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
+            "14": true,
             "4": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 3,
         "name": "Magnamalo",
@@ -809,8 +1043,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "12": true,
-            "3": true
+            "14": true,
+            "3": true,
+            "9": true
         },
         "mystery_rank": 1,
         "name": "Bishaten",
@@ -822,8 +1059,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
             "12": true,
-            "4": true
+            "14": true,
+            "4": true,
+            "9": true
         },
         "mystery_rank": 1,
         "name": "Aknosom",
@@ -833,10 +1073,13 @@
         "capture": true,
         "main": true,
         "maps": {
+            "0": true,
             "1": true,
+            "10": true,
             "12": true,
             "4": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 1,
         "name": "Tetranadon",
@@ -846,10 +1089,10 @@
         "capture": true,
         "main": true,
         "maps": {
-            "0": true,
             "3": true,
             "4": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 2,
         "name": "Somnacanth",
@@ -860,8 +1103,11 @@
         "main": true,
         "maps": {
             "0": true,
+            "10": true,
+            "14": true,
             "2": true,
-            "5": true
+            "5": true,
+            "9": true
         },
         "mystery_rank": 3,
         "name": "Rakna-Kadaki",
@@ -873,8 +1119,11 @@
         "maps": {
             "0": true,
             "1": true,
+            "10": true,
+            "14": true,
             "2": true,
-            "3": true
+            "3": true,
+            "9": true
         },
         "mystery_rank": 3,
         "name": "Almudron",
@@ -884,9 +1133,10 @@
         "capture": true,
         "main": true,
         "maps": {
-            "0": true,
+            "10": true,
             "13": true,
-            "4": true
+            "4": true,
+            "9": true
         },
         "mystery_rank": 3,
         "name": "Goss Harag",
@@ -896,9 +1146,10 @@
         "capture": true,
         "main": true,
         "maps": {
-            "0": true,
             "1": true,
-            "4": true
+            "10": true,
+            "4": true,
+            "9": true
         },
         "mystery_rank": 0,
         "name": "Great Izuchi",

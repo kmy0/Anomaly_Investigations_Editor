@@ -20,10 +20,6 @@ data.monster_arrays = {
     extra={
         map_valid={},
         current={}
-    },
-    intruder={
-        map_valid={},
-        current={}
     }
 }
 data.maps = {
@@ -39,7 +35,7 @@ data.maps = {
         ["Arena"]=10,
         ["Forlorn Arena"]=14
     },
-    invalid={
+    extra={
         ["Infernal Springs"]=9,
         ["Arena"]=10,
         ["Forlorn Arena"]=14
@@ -62,9 +58,10 @@ data.rand_rank = {
         ['2-6']=1,
         ['3-7']=349,
         ['4-8']=351,
-        ['5-8']=350,
-        ['6-8']=1303,
-        ['7-8']=2073
+        ['5-9']=350,
+        ['6-9']=1303,
+        ['7-9']=2073,
+        ['8-9']=2120
     },
     array={}
 }
@@ -98,16 +95,16 @@ data.authorization = {
         [4]='Invalid Monsters',
         [5]='Quest Level Too Low',
         [6]='Invalid Quest Conditions',
-        [-1]='Invalid Map'
+        [7]='Invalid Map'
     },
     status=0,
     force_check=false
 }
 data.aie = {
     quest_counter_open=false,
-    target_num_cap=3,
+    target_num_cap=4,
     max_quest_count=120,
-    max_quest_level=220,
+    max_quest_level=300,
     max_quest_life=9,
     max_quest_time_limit=50,
     max_quest_hunter_num=4,
@@ -117,15 +114,16 @@ data.aie = {
     },
 }
 data.probabilties = {
-    {'Stars', '1', '1-4', '1-5', '2-6', '3-7', '4-8', '5-8', '6-8', '7-8'},
-    {'1', 100, 25, 10, 0, 0, 0, 0, 0, 0},
-    {'2', 0, 43, 25, 10, 0, 0, 0, 0, 0},
-    {'3', 0, 27, 37, 25, 15, 0, 0, 0, 0},
-    {'4', 0, 5, 23, 37, 30, 15, 0, 0, 0},
-    {'5', 0, 0, 5, 23, 37, 30, 21, 0, 0},
-    {'6', 0, 0, 0, 5, 15, 37, 35, 23, 0},
-    {'7', 0, 0, 0, 0, 3, 15, 33, 40, 42},
-    {'8', 0, 0, 0, 0, 0, 3, 11, 37, 58},
+    {'Stars', '1', '1-4', '1-5', '2-6', '3-7', '4-8', '5-9', '6-9', '7-9', '8-9'},
+    {'1', 100, 25, 10, 0, 0, 0, 0, 0, 0, 0},
+    {'2', 0, 43, 25, 10, 0, 0, 0, 0, 0, 0},
+    {'3', 0, 27, 37, 25, 15, 0, 0, 0, 0, 0},
+    {'4', 0, 5, 23, 37, 30, 15, 0, 0, 0, 0},
+    {'5', 0, 0, 5, 23, 37, 30, 20, 0, 0, 0},
+    {'6', 0, 0, 0, 5, 15, 37, 35, 20, 0, 0},
+    {'7', 0, 0, 0, 0, 3, 15, 32, 35, 25, 0},
+    {'8', 0, 0, 0, 0, 0, 3, 11, 32, 35, 30},
+    {'9', 0, 0, 0, 0, 0, 0, 2, 13, 40, 70},
 }
 data.valid_combinations = {
     {'Quest Level', 'Main Target Mystery Rank', 'Sub Target Normal Rank', 'Target Num', 'Quest Life', 'Time Limit', 'Hunter Num'},
@@ -138,42 +136,25 @@ data.valid_combinations = {
     {'61 - 70', '0 - 4', '0 - 6', '1 - 3', '2 - 5', '25, 30, 35, 50', '4'},
     {'71 - 90', '0 - 5', '0 - 6', '1 - 3', '2 - 5', '25, 30, 35, 50', '2, 4'},
     {'91 - 110', '0 - 6', '0 - 7', '1 - 3', '1 - 4', '25, 30, 35, 50', '2, 4'},
-    {'111 - 220', '0 - 7', '0 - 7', '1 - 3', '1 - 4', '25, 30, 35, 50', '2, 4'}
+    {'111 - 130', '0 - 7', '0 - 7', '1 - 3', '1 - 4', '25, 30, 35, 50', '2, 4'},
+    {'131 - 300', '0 - 8', '0 - 7', '1 - 3', '1 - 4', '25, 30, 35, 50', '2, 4'}
 }
 data.valid_time_limit = {
     {'Target Num','Time Limit'},
     {'1', '25, 30, 35, 50'},
     {'2', '30, 35, 50'},
-    {'3', '50'}
+    {'3, 4', '50'}
 }
 data.normal_rank_11_rules = {
     {'Monster','Min Level'},
-    {'Velkhana', 1},
     {'Apex Arzuros', 21},
     {'Apex Rathian', 21},
-    {'Apex Mizutsune', 21},
-    {'Apex Rathalos', 21},
+    {'Apex Mizutsune', 121},
+    {'Apex Rathalos', 161},
+    {'Apex Diablos', 201},
+    {'Apex Zinogre', 241}
 }
-data.default_mon_conditions = {
-    [1]={
-        mon0_cond=1,
-        mon1_cond=14,
-        mon2_cond=14,
-        mon5_cond=15,
-    },
-    [2]={
-        mon0_cond=1,
-        mon1_cond=1,
-        mon2_cond=14,
-        mon5_cond=15,
-    },
-    [3]={
-        mon0_cond=3,
-        mon1_cond=1,
-        mon2_cond=1,
-        mon5_cond=0,
-    }
-}
+
 
 local function get_quest_count()
     data.mystery_quests.count = data.aie.max_quest_count - data.get_questman():getFreeMysteryQuestDataIndexList(data.aie.max_quest_count):get_Count()
@@ -196,7 +177,7 @@ local function get_mystery_quest_data_table()
 
             quest.monsters = quest.data._BossEmType
 
-            for _, idx in pairs({0, 1, 2, 5}) do
+            for _, idx in pairs({0, 1, 2, 3, 5}) do
 
                 quest['monster' .. idx] = quest.monsters:get_Item(idx)
 
@@ -222,11 +203,13 @@ local function get_mystery_quest_data_table()
                 monster0=quest.monster0,
                 monster1=quest.monster1,
                 monster2=quest.monster2,
+                monster3=quest.monster3,
                 monster5=quest.monster5,
                 _TimeLimit=quest.data._TimeLimit,
                 _QuestLife=quest.data._QuestLife,
                 _StartTime=quest.data._StartTime,
                 _QuestOrderNum=quest.data._QuestOrderNum,
+                _isSpecialQuestOpen=quest.data._isSpecialQuestOpen,
                 data=quest.data,
                 selected=config.user_input.selection[quest.no],
                 auth=data.quest_check(quest.data)
@@ -256,13 +239,12 @@ function data.dump_monsters()
     local monster_table = sdk.find_type_definition('snow.enemy.EnemyDef.EmTypes'):get_fields()
     local monsters = {}
 
-
     for _,monster in pairs(monster_table) do
         if monster then
             local monster_data = {}
             local maps = {}
             monster_data.id = tostring(monster:get_data())
-            monster_data.maps = questman:getStageLotTable(tonumber(monster_data.id))
+            monster_data.maps = questman:getStageLotTable(tonumber(monster_data.id), true)
 
             if not monster_data.maps then goto continue end
 
@@ -320,12 +302,8 @@ end
 function data.quest_check(mystery_data)
     data.authorization.force_check = true
     data.authorization.status = random_mystery_quest_auth:call(data.get_questman(), mystery_data, false)
-
-    if data.authorization.status == 4 and data.maps.invalid[ data.maps.id_table[ mystery_data._MapNo ] ] then
-        data.authorization.status = -1
-    end
-
     data.authorization.force_check = false
+
     return data.authorization.status
 end
 
@@ -334,15 +312,14 @@ function data.get_arrays()
 
     data.monster_arrays.main.current = {}
     data.monster_arrays.extra.current = {}
-    data.monster_arrays.intruder.current = {}
     data.monster_arrays.main.map_valid = {}
     data.monster_arrays.extra.map_valid = {}
-    data.monster_arrays.intruder.map_valid = {}
 
     config.user_input.monster0.pick = 1
     config.user_input.monster1.pick = 2
     config.user_input.monster2.pick = 3
-    config.user_input.monster5.pick = 1
+    config.user_input.monster3.pick = 4
+    config.user_input.monster5.pick = 5
 
     for name, id in pairs(data.monsters.id_table) do
         if data.monsters.table[id].maps[map_id] then
@@ -350,20 +327,15 @@ function data.get_arrays()
                 table.insert(data.monster_arrays.main.map_valid, name)
             end
             table.insert(data.monster_arrays.extra.map_valid, name)
-            table.insert(data.monster_arrays.intruder.map_valid, name)
         end
     end
 
-    table.insert(data.monster_arrays.intruder.map_valid, 'None - 0 - 0')
     table.insert(data.monster_arrays.extra.map_valid, 'None - 0 - 0')
-
     table.sort(data.monster_arrays.main.map_valid)
     table.sort(data.monster_arrays.extra.map_valid)
-    table.sort(data.monster_arrays.intruder.map_valid)
 
     data.monster_arrays.main.current = data.monster_arrays.main.map_valid
     data.monster_arrays.extra.current = data.monster_arrays.extra.map_valid
-    data.monster_arrays.intruder.current = data.monster_arrays.intruder.map_valid
 end
 
 function data.get_questman()
@@ -415,7 +387,7 @@ function data.init()
 
     for id, mon in pairs(data.monsters.table) do
         if id ~= "0" then
-            for _, map_id in pairs(data.maps.invalid) do
+            for _, map_id in pairs(data.maps.extra) do
                 data.monsters.table[id].maps[tostring(map_id)] = true
             end
         end
