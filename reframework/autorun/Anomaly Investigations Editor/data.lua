@@ -52,19 +52,20 @@ data.mystery_quests = {
 }
 data.rand_rank = {
     table={
-        ['1']=0,
-        ['1-4']=107,
-        ['1-5']=19,
-        ['2-6']=1,
-        ['3-7']=349,
-        ['4-8']=351,
-        ['5-9']=350,
-        ['6-9']=1303,
-        ['7-9']=2073,
-        ['8-9']=2120
+        ['1']=-1,
+        ['1-4']=0,
+        ['1-5']=1,
+        ['2-6']=2,
+        ['3-7']=3,
+        ['4-8']=4,
+        ['5-9']=5,
+        ['6-9']=6,
+        ['7-9']=7,
+        ['8-9']=8
     },
     array={}
 }
+data.mystery_rank_to_mon_array = {[-1]={0}}
 data.tod = {
     table={
         Default=0,
@@ -390,6 +391,12 @@ function data.init()
             for _, map_id in pairs(data.maps.extra) do
                 data.monsters.table[id].maps[tostring(map_id)] = true
             end
+
+            if not data.mystery_rank_to_mon_array[mon.mystery_rank] then
+                data.mystery_rank_to_mon_array[mon.mystery_rank] = {}
+            end
+
+            table.insert(data.mystery_rank_to_mon_array[mon.mystery_rank], tonumber(id))
         end
 
         data.monsters.id_table[ string.format("%s - %i - %i", mon.name, mon.mystery_rank, mon.normal_rank) ] = id

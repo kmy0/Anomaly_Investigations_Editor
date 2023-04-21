@@ -513,16 +513,18 @@ function editor.edit_quest()
     data.reset_mystery_data()
 end
 
-function editor.generate_random(id, amount)
+function editor.generate_random(mystery_rank, amount)
     if data.mystery_quests.count == data.aie.max_quest_count then return end
 
     if data.mystery_quests.count + amount > data.aie.max_quest_count then
         amount = data.aie.max_quest_count - data.mystery_quests.count
     end
 
+    local mon_array = data.mystery_rank_to_mon_array[mystery_rank]
     for i=1, amount do
         local mystery_data = sdk.create_instance('snow.quest.RandomMysteryQuestData')
         local mystery_quest_no, mystery_index = get_free_quest_no()
+        local id = mon_array[math.random(#mon_array)]
 
         if not mystery_quest_no then
             data.reset_mystery_data()

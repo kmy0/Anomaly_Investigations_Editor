@@ -4,7 +4,7 @@ local misc
 local data
 
 config.name = 'Anomaly Investigations Editor'
-config.version = '1.4.0'
+config.version = '1.4.1'
 config.user_input = {
     map=1,
     quest_lvl=1,
