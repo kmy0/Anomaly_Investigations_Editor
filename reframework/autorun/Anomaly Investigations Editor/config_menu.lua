@@ -64,7 +64,7 @@ local table_normal_rank_11_rules = {
     name='3',
     flags=table_flags,
     col_count=2,
-    row_count=8,
+    row_count=7,
     data={}
 }
 local colors = {
