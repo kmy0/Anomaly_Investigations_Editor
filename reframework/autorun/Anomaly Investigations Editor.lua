@@ -6,7 +6,7 @@ local filter = require('Anomaly Investigations Editor/filter')
 
 data.init()
 
-if not data.monsters then return end
+if not data.monsters.table then return end
 
 config.init()
 filter.init()
