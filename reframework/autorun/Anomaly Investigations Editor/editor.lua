@@ -37,19 +37,31 @@ local function get_valid_target_num(current, mystery_data)
     }
     local valid_target_num = {}
     local valid_target_num_l
+    local max_mon = 4
 
     if misc.table_contains(apexes, em_types:get_Item(2)) then
         return 3
     end
 
     valid_target_num_t = valid_target_num_t[time_limit]
-
-    if level > 50 then
+    if level > 220 then
         valid_target_num_l = {1, 2, 3, 4}
+    elseif level > 50 then
+        valid_target_num_l = {1, 2, 3}
     elseif level > 20 then
-        valid_target_num_l = {1, 2, 4}
+        valid_target_num_l = {1, 2}
     else
-        valid_target_num_l = {1, 4}
+        valid_target_num_l = {1}
+    end
+
+    for _, v in pairs({0, 1, 2 ,3}) do
+        if em_types:get_Item(v) == 0 then
+            max_mon = max_mon - 1
+        end
+    end
+
+    if data.maps.extra[ data.maps.id_table[ mystery_data._MapNo ] ] then
+        table.remove(valid_target_num_l, 4)
     end
 
     if misc.table_contains(apexes, em_types:get_Item(1)) then
@@ -57,7 +69,7 @@ local function get_valid_target_num(current, mystery_data)
     end
 
     for _, v in ipairs(valid_target_num_l) do
-        if misc.table_contains(valid_target_num_t, v) then
+        if v <= max_mon and misc.table_contains(valid_target_num_t, v) then
             table.insert(valid_target_num, v)
         end
     end

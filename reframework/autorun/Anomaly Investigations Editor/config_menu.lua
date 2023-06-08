@@ -43,7 +43,7 @@ local table_valid_combination = {
     name='2',
     flags=table_flags,
     col_count=7,
-    row_count=12,
+    row_count=13,
     data={}
 }
 local table_valid_time_limit = {
@@ -328,7 +328,6 @@ function sub_window.draw()
         imgui.text('Main target follows MYSTERY rank')
         imgui.text('Sub target follows NORMAL rank')
         imgui.text('Authorization doesnt check Extra targets and Intruders at all')
-        imgui.text('4 Target Num works from level 1')
         create_table(table_valid_combination)
         imgui.new_line()
         create_table(table_valid_time_limit)

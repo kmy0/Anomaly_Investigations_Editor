@@ -311,6 +311,22 @@
         "name": "Seething Bazelgeuse",
         "normal_rank": 5
     },
+    "1412": {
+        "capture": false,
+        "main": false,
+        "maps": {
+            "0": true,
+            "1": true,
+            "10": true,
+            "13": true,
+            "14": true,
+            "5": true,
+            "9": true
+        },
+        "mystery_rank": 11,
+        "name": "Primordial Malzeno",
+        "normal_rank": 5
+    },
     "1793": {
         "capture": false,
         "main": false,
