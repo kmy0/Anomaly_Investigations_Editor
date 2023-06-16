@@ -363,7 +363,7 @@ end
 
 function data.reset_mystery_data(reset_quest_pick)
     if not reset_quest_pick then
-        data.quest_pick.name = data.mystery_quests.names[ config.user_input.quest_pick ]
+        data.quest_pick.name = data.mystery_quests.names_filtered[ config.user_input.quest_pick ]
     else
         data.quest_pick.name = nil
         data.quest_pick.quest = nil
@@ -374,6 +374,7 @@ function data.reset_mystery_data(reset_quest_pick)
     get_mystery_quest_data_table()
     get_quest_count()
     filter.filter_names()
+
     if data.quest_pick.quest and not data.quest_pick.name then config.reset_input() end
     config.user_input.selection_count = 0
     aie_autoquest_reload = true

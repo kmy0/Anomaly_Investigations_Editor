@@ -98,6 +98,10 @@ function filter.filter_names()
     if not config.user_input.quest_pick then
         config.user_input.quest_pick = 1
         data.quest_pick.quest = data.mystery_quests.table[ data.mystery_quests.names_filtered[config.user_input.quest_pick] ]
+
+        if data.quest_pick.quest then
+            config.reset_input()
+        end
     end
 end
 
