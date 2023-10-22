@@ -9,7 +9,7 @@ local random_mystery_quest_auth = sdk.find_type_definition('snow.quest.nRandomMy
 
 
 data.monsters = {
-    table=monsters,
+    table={},
     id_table={}
 }
 data.monster_arrays = {
