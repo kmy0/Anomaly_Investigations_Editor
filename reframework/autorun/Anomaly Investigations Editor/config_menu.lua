@@ -348,8 +348,6 @@ function sub_window.draw()
 end
 
 function config_menu.draw()
-    imgui.push_style_var(11, 5.0) -- Rounded elements
-    imgui.push_style_var(2, 10.0) -- Window Padding
     imgui.set_next_window_pos(main_window.pos, main_window.condition, main_window.pivot)
     imgui.set_next_window_size(main_window.size, main_window.condition)
 
@@ -666,11 +664,9 @@ function config_menu.draw()
             end
         end
         data.game_state.previous = data.game_state.current
-        imgui.pop_style_var(2)
         imgui.end_window()
     else
         if config_menu.is_opened then
-            imgui.pop_style_var(2)
             imgui.end_window()
         end
         config_menu.is_opened = false
